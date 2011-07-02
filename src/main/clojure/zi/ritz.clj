@@ -4,7 +4,7 @@
    [zi.core :as core])
   (:import
    java.io.File
-   [maven.clojure.annotations
+   [clojure.maven.annotations
     Goal RequiresDependencyResolution Parameter Component]
     org.apache.maven.plugin.ContextEnabled
     org.apache.maven.plugin.Mojo
