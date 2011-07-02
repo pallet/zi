@@ -18,6 +18,9 @@
   {Goal "ritz"
    RequiresDependencyResolution "test"}
   [
+   ^{Component {:role "org.sonatype.aether.RepositorySystem"}}
+   repoSystem
+
    ^{Parameter
      {:expression "${clojure.swank.port}" :defaultValue "4005"}}
    ^Integer
