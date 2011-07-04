@@ -13,8 +13,8 @@
       RequiresDependencyResolution "test"}
     SimpleMojo
   [
-   ^{Component {:role "org.sonatype.aether.RepositorySystem"}}
-   repoSystem
+   ^{Parameter {:typename "java.lang.String[]"}}
+   sourceDirectories
 
    ^{:volatile-mutable true}
    log
@@ -24,8 +24,7 @@
 
   Mojo
   (execute [_]
-    (when-not repoSystem
-      (throw (MojoExecutionException. "repoSystem was not injected"))))
+    (.info log sourceDirectories))
 
   (setLog [_ logger] (set! log logger))
   (getLog [_] log)
