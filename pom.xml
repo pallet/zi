@@ -53,6 +53,11 @@
       <version>0.5.2</version>
     </dependency>
 
+    <dependency>
+      <groupId>ritz</groupId>
+      <artifactId>ritz</artifactId>
+      <version>0.1.7-SNAPSHOT</version>
+    </dependency>
 
     <dependency>
       <groupId>org.apache.maven</groupId>

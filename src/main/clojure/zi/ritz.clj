@@ -67,13 +67,18 @@
                     (catch java.io.IOException e
                       (throw
                        (MojoExecutionException.
-                        "Could not create swank port file" e))))]
+                        "Could not create swank port file" e))))
+          ritz-artifact (filter
+                         #(re-find #"ritz/ritz/[0-9.]+(?:-SNAPSHOT)?/ritz" %)
+                         (map
+                          #(.getPath %)
+                          (.getURLs (.getClassLoader clojure.lang.RT))))]
       (core/eval-clojure
        (or sourceDirectories ["src/main/clojure" "src/test/clojure"])
-       test-classpath-elements
+       (into (vec test-classpath-elements) ritz-artifact)
        `(do
-          (require '~'swank-clj.socket-server)
-          (swank-clj.socket-server/start
+          (require '~'ritz.socket-server)
+          (ritz.socket-server/start
            {:port-file ~(.getPath tmpfile)
             :host ~swank-host
             :port ~(Integer/parseInt port)
