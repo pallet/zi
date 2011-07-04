@@ -71,7 +71,7 @@
     <dependency>
       <groupId>ritz</groupId>
       <artifactId>ritz</artifactId>
-      <version>0.1.7-SNAPSHOT</version>
+      <version>0.1.7</version>
     </dependency>
 
     <dependency>
