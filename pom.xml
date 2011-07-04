@@ -10,6 +10,12 @@
   <description>A maven plugin for clojure</description>
   <url>https://github.com/pallet/zi</url>
 
+  <scm>
+    <connection>scm:git:git://github.com/pallet/zi.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/pallet/zi.git</developerConnection>
+    <url>https://github.com/pallet/zi</url>
+  </scm>
+
   <build>
     <resources>
       <resource>
