@@ -9,6 +9,14 @@
   <name>zi</name>
   <description>A maven plugin for clojure</description>
   <url>https://github.com/pallet/zi</url>
+  <inceptionYear>2011</inceptionYear>
+
+  <licenses>
+    <license>
+      <name>Eclipse Public License</name>
+      <url>http://www.eclipse.org/legal/epl-v10.html</url>
+    </license>
+  </licenses>
 
   <scm>
     <connection>scm:git:git://github.com/pallet/zi.git</connection>
@@ -170,6 +178,19 @@
       <url>${snapshotRepository.url}</url>
     </snapshotRepository>
   </distributionManagement>
+
+  <developers>
+    <developer>
+      <name>Hugo Duncan</name>
+      <id>hugoduncan</id>
+      <email>hugo -at- hugoduncan -dot- org</email>
+      <roles>
+        <role>PMC</role>
+        <role>Developer</role>
+      </roles>
+      <timezone>-5</timezone>
+    </developer>
+  </developers>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
