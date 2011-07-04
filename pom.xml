@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.cloudhoist</groupId>
+  <groupId>org.cloudhoist.plugin</groupId>
   <artifactId>zi</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>zi</name>
   <description>A maven plugin for clojure</description>
   <url>https://github.com/pallet/zi</url>
+  <inceptionYear>2011</inceptionYear>
+
+  <licenses>
+    <license>
+      <name>Eclipse Public License</name>
+      <url>http://www.eclipse.org/legal/epl-v10.html</url>
+    </license>
+  </licenses>
+
+  <scm>
+    <connection>scm:git:git://github.com/pallet/zi.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/pallet/zi.git</developerConnection>
+    <url>https://github.com/pallet/zi</url>
+  </scm>
 
   <build>
     <resources>
@@ -22,9 +36,9 @@
         <version>2.6</version>
         <dependencies>
           <dependency>
-            <groupId>maven-clojure</groupId>
-            <artifactId>maven-plugin-tools-clojure</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
+            <groupId>org.cloudhoist</groupId>
+            <artifactId>clojure-maven-mojo-descriptor-extractor</artifactId>
+            <version>${clojureMavenVersion}</version>
           </dependency>
         </dependencies>
       </plugin>
@@ -35,6 +49,15 @@
         <configuration>
           <source>1.5</source>
           <target>1.5</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+          <localCheckout>true</localCheckout>
+          <pushChanges>false</pushChanges>
         </configuration>
       </plugin>
     </plugins>
@@ -53,6 +76,11 @@
       <version>0.5.2</version>
     </dependency>
 
+    <dependency>
+      <groupId>ritz</groupId>
+      <artifactId>ritz</artifactId>
+      <version>0.1.7</version>
+    </dependency>
 
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -80,12 +108,12 @@
     <dependency>
       <groupId>org.cloudhoist</groupId>
       <artifactId>clojure-maven-mojo-annotations</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
+      <version>${clojureMavenVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.cloudhoist</groupId>
       <artifactId>clojure-maven-plexus-component-factory</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
+      <version>${clojureMavenVersion}</version>
       <scope>runtime</scope>
     </dependency>
   </dependencies>
@@ -97,9 +125,77 @@
     </repository>
   </repositories>
 
+  <profiles>
+    <profile>
+      <id>sonatype-release-profile-extension</id>
+      <activation>
+        <property>
+          <name>performRelease</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <configuration>
+              <keyName>${gpg.keyname}</keyName>
+              <passphrase>${gpg.passphrase}</passphrase>
+            </configuration>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>sonatype-repo-deploy</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <snapshotRepository.url>https://oss.sonatype.org/content/repositories/snapshots</snapshotRepository.url>
+        <snapshotRepository.id>sonatype-nexus-snapshots</snapshotRepository.id>
+      </properties>
+    </profile>
+  </profiles>
+
+  <distributionManagement>
+    <repository>
+      <id>sonatype-nexus-staging</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+      <uniqueVersion>false</uniqueVersion>
+    </repository>
+    <snapshotRepository>
+      <id>${snapshotRepository.id}</id>
+      <url>${snapshotRepository.url}</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <developers>
+    <developer>
+      <name>Hugo Duncan</name>
+      <id>hugoduncan</id>
+      <email>hugo -at- hugoduncan -dot- org</email>
+      <roles>
+        <role>PMC</role>
+        <role>Developer</role>
+      </roles>
+      <timezone>-5</timezone>
+    </developer>
+  </developers>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <mavenVersion>3.0.3</mavenVersion>
     <aetherVersion>1.11</aetherVersion>
+    <clojureMavenVersion>0.1.0</clojureMavenVersion>
   </properties>
 </project>
