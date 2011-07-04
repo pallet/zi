@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.cloudhoist.plugin</groupId>
   <artifactId>zi</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>zi</name>
   <description>A maven plugin for clojure</description>
   <url>https://github.com/pallet/zi</url>
+  <inceptionYear>2011</inceptionYear>
+
+  <licenses>
+    <license>
+      <name>Eclipse Public License</name>
+      <url>http://www.eclipse.org/legal/epl-v10.html</url>
+    </license>
+  </licenses>
+
+  <scm>
+    <connection>scm:git:git://github.com/pallet/zi.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/pallet/zi.git</developerConnection>
+    <url>https://github.com/pallet/zi</url>
+  </scm>
 
   <build>
     <resources>
@@ -24,7 +38,7 @@
           <dependency>
             <groupId>org.cloudhoist</groupId>
             <artifactId>clojure-maven-mojo-descriptor-extractor</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
+            <version>${clojureMavenVersion}</version>
           </dependency>
         </dependencies>
       </plugin>
@@ -65,7 +79,7 @@
     <dependency>
       <groupId>ritz</groupId>
       <artifactId>ritz</artifactId>
-      <version>0.1.7-SNAPSHOT</version>
+      <version>0.1.7</version>
     </dependency>
 
     <dependency>
@@ -94,12 +108,12 @@
     <dependency>
       <groupId>org.cloudhoist</groupId>
       <artifactId>clojure-maven-mojo-annotations</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
+      <version>${clojureMavenVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.cloudhoist</groupId>
       <artifactId>clojure-maven-plexus-component-factory</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
+      <version>${clojureMavenVersion}</version>
       <scope>runtime</scope>
     </dependency>
   </dependencies>
@@ -165,9 +179,23 @@
     </snapshotRepository>
   </distributionManagement>
 
+  <developers>
+    <developer>
+      <name>Hugo Duncan</name>
+      <id>hugoduncan</id>
+      <email>hugo -at- hugoduncan -dot- org</email>
+      <roles>
+        <role>PMC</role>
+        <role>Developer</role>
+      </roles>
+      <timezone>-5</timezone>
+    </developer>
+  </developers>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <mavenVersion>3.0.3</mavenVersion>
     <aetherVersion>1.11</aetherVersion>
+    <clojureMavenVersion>0.1.0</clojureMavenVersion>
   </properties>
 </project>
