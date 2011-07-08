@@ -25,15 +25,20 @@
   </scm>
 
   <build>
-    <resources>
-      <resource>
-        <directory>src/main/clojure</directory>
-      </resource>
-    </resources>
+    <sourceDirectory>src/main/clojure</sourceDirectory>
     <plugins>
       <plugin>
         <artifactId>maven-plugin-plugin</artifactId>
         <version>2.6</version>
+        <executions>
+          <execution>
+            <id>default-descriptor</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>descriptor</goal>
+            </goals>
+          </execution>
+        </executions>
         <dependencies>
           <dependency>
             <groupId>org.cloudhoist</groupId>
@@ -50,6 +55,32 @@
           <source>1.5</source>
           <target>1.5</target>
         </configuration>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <id>default-compile</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <phase>compile</phase>
+            <id>clojure-compile</id>
+            <configuration>
+              <compilerId>clojure</compilerId>
+            </configuration>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.cloudhoist</groupId>
+            <artifactId>clojure-maven-plexus-compiler</artifactId>
+            <version>${clojureMavenVersion}</version>
+          </dependency>
+        </dependencies>
       </plugin>
       <plugin>
         <artifactId>maven-release-plugin</artifactId>
@@ -59,6 +90,19 @@
           <localCheckout>true</localCheckout>
           <pushChanges>false</pushChanges>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.ops4j</groupId>
+        <artifactId>maven-inherit-plugin</artifactId>
+        <version>1.1</version>
+        <executions>
+          <execution>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>inherit</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
@@ -116,6 +160,18 @@
       <version>${clojureMavenVersion}</version>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>org.cloudhoist</groupId>
+      <artifactId>clojure-maven-plexus-compiler</artifactId>
+      <version>${clojureMavenVersion}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-compiler-plugin</artifactId>
+      <version>2.3.2</version>
+      <type>maven-plugin</type>
+    </dependency>
   </dependencies>
 
   <repositories>
@@ -124,6 +180,16 @@
       <url>http://clojars.org/repo</url>
     </repository>
   </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>ops4j.releases</id>
+      <url>http://repository.ops4j.org/maven2</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
 
   <profiles>
     <profile>
@@ -196,6 +262,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <mavenVersion>3.0.3</mavenVersion>
     <aetherVersion>1.11</aetherVersion>
-    <clojureMavenVersion>0.1.0</clojureMavenVersion>
+    <clojureMavenVersion>0.1.1-SNAPSHOT</clojureMavenVersion>
   </properties>
 </project>

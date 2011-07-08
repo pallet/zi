@@ -6,6 +6,7 @@ This is alpha quality.
 
 ## Available goals
 
+ * zi:compile
  * zi:ritz
 
 ## Install
@@ -43,6 +44,56 @@ Currently it is not possible to configure much.  The source paths are fixed
 to `src/main/clojure` and `src/test/clojure`.
 
 ## Goals
+
+### compile
+
+The compile goal compiles clojure source.
+
+```xml
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>org.cloudhoist.plugin</groupId>
+          <artifactId>zi</artifactId>
+          <version>0.1.1-SNAPSHOT</version>
+          <executions>
+            <execution>
+              <id>default-compile</id>
+              <goals>
+                <goal>compile</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <excludes>
+              <exclude>**/test.clj</exclude>
+            </excludes>
+          </configuration>
+        </plugin>
+      </plugins>
+    </build>
+```
+
+<table>
+  <tr>
+    <th>Property</th>
+    <th>Variable</th>
+    <th>Default</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>includes</td>
+    <td>
+    <td>**/*.clj</td>
+    <td>A set of source patterns to include</td>
+  </tr>
+  <tr>
+    <td>excludes</td>
+    <td>
+    <td></td>
+    <td>A set of source patterns to exclude</td>
+  </tr>
+</table>
 
 ### ritz
 
