@@ -48,3 +48,9 @@
 (defn find-namespaces
   [base-directory]
   (map file-to-namespace (clj-files base-directory)))
+
+(defn clojure-source-paths
+  [source-directory]
+  (if (.endsWith source-directory "/java")
+    [(string/replace source-directory #"/java$" "/clojure") source-directory]
+    [source-directory]))

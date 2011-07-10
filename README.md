@@ -6,6 +6,7 @@ This is alpha quality.
 
 ## Available goals
 
+ * zi:resources
  * zi:compile
  * zi:ritz
 
@@ -44,6 +45,30 @@ Currently it is not possible to configure much.  The source paths are fixed
 to `src/main/clojure` and `src/test/clojure`.
 
 ## Goals
+
+### resource
+
+The resources goal copies clojure source to the target.
+
+```xml
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>org.cloudhoist.plugin</groupId>
+          <artifactId>zi</artifactId>
+          <version>0.1.1-SNAPSHOT</version>
+          <executions>
+            <execution>
+              <id>default-resources</id>
+              <goals>
+                <goal>resources</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </build>
+```
 
 ### compile
 

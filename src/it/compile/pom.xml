@@ -18,13 +18,19 @@
             <goals>
               <goal>compile</goal>
             </goals>
+            <configuration>
+              <excludes>
+                <exclude>**/test.clj</exclude>
+              </excludes>
+            </configuration>
+          </execution>
+          <execution>
+            <id>default-resources</id>
+            <goals>
+              <goal>resources</goal>
+            </goals>
           </execution>
         </executions>
-        <configuration>
-          <excludes>
-            <exclude>**/test.clj</exclude>
-          </excludes>
-        </configuration>
       </plugin>
     </plugins>
   </build>
