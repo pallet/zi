@@ -1,7 +1,8 @@
 (ns zi.ritz
   "ritz mojo for zi plugin"
   (:require
-   [zi.core :as core])
+   [zi.core :as core]
+   [zi.mojo :as mojo])
   (:import
    java.io.File
    [clojure.maven.annotations
@@ -10,35 +11,13 @@
     org.apache.maven.plugin.Mojo
     org.apache.maven.plugin.MojoExecutionException))
 
-(deftype
-    ^{Goal "ritz"
-      RequiresDependencyResolution "test"}
-    RitzMojo
+(def ^{:const true} ritz-path-regex
+  #"ritz/ritz/[0-9.]+(?:-SNAPSHOT)?/ritz")
+
+(mojo/defmojo RitzMojo
+  {Goal "ritz"
+   RequiresDependencyResolution "test"}
   [
-   ^{Parameter
-     {:expression "${basedir}" :required true :readonly true}}
-   base-directory
-
-   ^{Parameter
-     {:defaultValue "${project.compileClasspathElements}"
-      :required true :readonly true :description "Compile classpath"}}
-   classpath-elements
-
-   ^{Parameter
-     {:defaultValue "${project.testClasspathElements}"
-      :required true :readonly true}}
-   test-classpath-elements
-
-   ^{Parameter
-     {:defaultValue "${project.build.outputDirectory}" :required true}}
-   output-directory
-
-   ^{Parameter {}}
-   sourceDirectories
-
-   ^{Parameter {}}
-   replScript
-
    ^{Parameter
      {:expression "${clojure.swank.port}" :defaultValue "4005"}}
    ^Integer
@@ -50,48 +29,29 @@
    encoding
 
    ^{Parameter
-     {:expression "${clojure.swank.host}" :defaultValue "localhost"}}
+     {:expression "${clojure.swank.network}" :defaultValue "localhost"}}
    ^String
-   swank-host
+   network]
 
-   ^{:volatile-mutable true}
-   log
-
-   plugin-context
-   ]
-
-  Mojo
-  (execute [_]
-    (let [tmpfile (try
-                    (File/createTempFile "swank" ".port")
-                    (catch java.io.IOException e
-                      (throw
-                       (MojoExecutionException.
-                        "Could not create swank port file" e))))
-          ritz-artifact (filter
-                         #(re-find #"ritz/ritz/[0-9.]+(?:-SNAPSHOT)?/ritz" %)
-                         (map
-                          #(.getPath %)
-                          (.getURLs (.getClassLoader clojure.lang.RT))))]
-      (core/eval-clojure
-       (or sourceDirectories ["src/main/clojure" "src/test/clojure"])
-       (into (vec test-classpath-elements) ritz-artifact)
-       `(do
-          (require '~'ritz.socket-server)
-          (ritz.socket-server/start
-           {:port-file ~(.getPath tmpfile)
-            :host ~swank-host
-            :port ~(Integer/parseInt port)
-            :encoding ~encoding
-            :dont-close true})))))
-
-  (setLog [_ logger] (set! log logger))
-  (getLog [_] log)
-
-  ContextEnabled
-  (setPluginContext [_ context] (reset! plugin-context context))
-  (getPluginContext [_] @plugin-context))
-
-(defn make-RitzMojo
-  []
-  (RitzMojo. nil nil nil nil nil nil nil nil nil nil (atom nil)))
+  (let [tmpfile (try
+                  (File/createTempFile "swank" ".port")
+                  (catch java.io.IOException e
+                    (throw
+                     (MojoExecutionException.
+                      "Could not create swank port file" e))))
+        ritz-artifact (filter
+                       #(re-find ritz-path-regex %)
+                       (map
+                        #(.getPath %)
+                        (.getURLs (.getClassLoader clojure.lang.RT))))]
+    (core/eval-clojure
+     (core/clojure-source-paths source-directory)
+     (into (vec test-classpath-elements) ritz-artifact)
+     `(do
+        (require '~'ritz.socket-server)
+        (ritz.socket-server/start
+         {:port-file ~(.getPath tmpfile)
+          :host ~network
+          :port ~(Integer/parseInt port)
+          :encoding ~encoding
+          :dont-close true})))))

@@ -40,6 +40,10 @@
                       :required true)
           ~(parameter 'classpath-elements
                       "Classpath elements"
+                      :defaultValue "${project.compileClasspathElements}"
+                      :required true :readonly true)
+          ~(parameter 'test-classpath-elements
+                      "Test classpath elements"
                       :defaultValue "${project.testClasspathElements}"
                       :required true :readonly true)
           ~(parameter 'compile-namespaces
@@ -47,7 +51,7 @@
                       :alias "compileNamespaces"
                       :typename "java.util.List")
           ~(parameter 'output-directory
-                      "Project base directory"
+                      "Project target directory"
                       :expression "${project.build.directory}"
                       :required true :readonly true)
           ~(vary-meta 'log assoc :volatile-mutable true)
@@ -63,4 +67,4 @@
        (~'setPluginContext [_# context#] (reset! ~'plugin-context context#))
        (~'getPluginContext [_#] (deref ~'plugin-context)))
      (defn ~(symbol (str "make-" (name mojo-name))) []
-       (new ~mojo-name ~@(repeat (+ (count fields) 7) nil) (atom nil)))))
+       (new ~mojo-name ~@(repeat (+ (count fields) 8) nil) (atom nil)))))
