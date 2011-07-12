@@ -39,11 +39,13 @@
                     (throw
                      (MojoExecutionException.
                       "Could not create swank port file" e))))
-        ritz-artifact (filter
-                       #(re-find ritz-path-regex %)
-                       (map
-                        #(.getPath %)
-                        (.getURLs (.getClassLoader clojure.lang.RT))))]
+        ritz-artifact (when-not (core/path-on-classpath?
+                                 ritz-path-regex test-classpath-elements)
+                        (filter
+                         #(re-find ritz-path-regex %)
+                         (map
+                          #(.getPath %)
+                          (.getURLs (.getClassLoader clojure.lang.RT)))))]
     (core/eval-clojure
      (core/clojure-source-paths source-directory)
      (into (vec test-classpath-elements) ritz-artifact)
