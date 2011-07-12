@@ -9,6 +9,8 @@ This is alpha quality.
  * zi:resources
  * zi:compile
  * zi:ritz
+ * zi:swank-clojure
+ * zi:test
 
 ## Install
 
@@ -144,6 +146,35 @@ The ritz goal starts a ritz server.
     <td>The swank encoding to use</td>
   </tr>
 </table>
+
+### swank-clojure
+
+The swank-clojure goal starts a swank-clojure server.
+
+<table>
+  <tr>
+    <th>Property</th>
+    <th>Variable</th>
+    <th>Default</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>port</td>
+    <td>clojure.swank.port</td>
+    <td>4005</td>
+    <td>The swank server port</td>
+  </tr>
+  <tr>
+    <td>encoding</td>
+    <td>clojure.swank.encoding</td>
+    <td>iso-8859-1</td>
+    <td>The swank encoding to use</td>
+  </tr>
+</table>
+
+### test
+
+The test goal runs clojure.test tests.
 
 
 ## Zi, the builder
