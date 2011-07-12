@@ -56,7 +56,7 @@ The resources goal copies clojure source to the target.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.1.1-SNAPSHOT</version>
+          <version>0.2.0</version>
           <executions>
             <execution>
               <id>default-resources</id>
@@ -80,7 +80,7 @@ The compile goal compiles clojure source.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.1.1-SNAPSHOT</version>
+          <version>0.2.0</version>
           <executions>
             <execution>
               <id>default-compile</id>
