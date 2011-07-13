@@ -31,12 +31,12 @@
           ~(parameter 'source-directory
                       "Source directory for clojure source"
                       :alias "sourceDirectory"
-                      :defaultValue "src/main/clojure"
+                      :defaultValue "${project.build.sourceDirectory}"
                       :required true)
           ~(parameter 'test-source-directory
                       "Source directory for clojure test source"
                       :alias "testSourceDirectory"
-                      :defaultValue "src/test/clojure"
+                      :defaultValue "${project.build.testSourceDirectory}"
                       :required true)
           ~(parameter 'classpath-elements
                       "Classpath elements"
