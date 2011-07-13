@@ -58,7 +58,7 @@ The resources goal copies clojure source to the target.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.2.0</version>
+          <version>0.2.1</version>
           <executions>
             <execution>
               <id>default-resources</id>
@@ -82,7 +82,7 @@ The compile goal compiles clojure source.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.2.0</version>
+          <version>0.2.1</version>
           <executions>
             <execution>
               <id>default-compile</id>
@@ -146,6 +146,10 @@ The ritz goal starts a ritz server.
     <td>The swank encoding to use</td>
   </tr>
 </table>
+
+The ritz and swank-clojure goals both recognise sub-projects linked in a
+checkouts directory, and adds their sources and resources to the the
+classpath.
 
 ### swank-clojure
 
