@@ -1,5 +1,12 @@
 # Release Notes
 
+## 0.2.1
+
+- Add checkouts to ritz and swank-clojure goals
+
+- Update readme with new goals
+
+
 ## 0.2.0
 
 - Allow overriding of ritz and swank-clojure artifacts
