@@ -3,6 +3,7 @@
   (:require
    [zi.mojo :as mojo]
    [zi.core :as core]
+   [zi.checkouts :as checkouts]
    [clojure.java.io :as io])
   (:import
    java.io.File
@@ -19,7 +20,17 @@
 (mojo/defmojo Swank
   {Goal "swank-clojure"
    RequiresDependencyResolution "test"}
-  [^{Parameter
+  [
+   ^{Component {:role "org.sonatype.aether.RepositorySystem"}}
+   repoSystem
+
+   ^{Component {:role "org.apache.maven.project.ProjectBuilder"}}
+   projectBuilder
+
+   ^{Parameter {:defaultValue "${repositorySystemSession}" :readonly true}}
+   repoSystemSession
+
+   ^{Parameter
      {:expression "${clojure.swank.port}" :defaultValue "4005"
       :description "Swank server port"}}
    ^Integer
@@ -46,7 +57,9 @@
                            #(.getPath %)
                            (.getURLs (.getClassLoader clojure.lang.RT)))))]
     (core/eval-clojure
-     (core/clojure-source-paths source-directory)
+     (into (core/clojure-source-paths source-directory)
+           (checkouts/checkout-paths
+            repoSystem repoSystemSession projectBuilder))
      (into (vec test-classpath-elements) swank-artifact)
      `(do
         (require '~'swank.swank '~'swank.commands.basic)
