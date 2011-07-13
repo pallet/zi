@@ -1,6 +1,14 @@
 # Zi
 
-Zi is a maven plugin for clojure.
+Zi is a maven plugin for clojure. It does something similar to
+[clojure-maven-plugin](http://github.com/talios/clojure-maven-plugin), but does
+so differently.
+
+It uses the maven pom `sourceDirectory` and `testSourceDirectory` settings to
+locate source, which by default means that it uses `src/main/clojure` and
+`src/test/clojure`.
+
+From an implementation perspecitve, most of the goals are written in clojure.
 
 This is alpha quality.
 
@@ -43,14 +51,16 @@ To globally enable the zi plugin, you need to add `pluginGroup` and
 
 ## Configuration
 
-Currently it is not possible to configure much.  The source paths are fixed
-to `src/main/clojure` and `src/test/clojure`.
+It uses the maven pom `sourceDirectory` and `testSourceDirectory` settings to
+locate source, which by default means that it uses `src/main/clojure` and
+`src/test/clojure`.
 
 ## Goals
 
 ### resource
 
-The resources goal copies clojure source to the target.
+The resources goal copies clojure source to the target. This is probably what
+you need to make sure that your clj source files end up in your jar file.
 
 ```xml
     <build>
@@ -74,7 +84,7 @@ The resources goal copies clojure source to the target.
 
 ### compile
 
-The compile goal compiles clojure source.
+The compile goal AOT compiles clojure source.
 
 ```xml
     <build>
