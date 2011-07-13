@@ -2,7 +2,8 @@
   "ritz mojo for zi plugin"
   (:require
    [zi.core :as core]
-   [zi.mojo :as mojo])
+   [zi.mojo :as mojo]
+   [zi.checkouts :as checkouts])
   (:import
    java.io.File
    [clojure.maven.annotations
@@ -18,6 +19,15 @@
   {Goal "ritz"
    RequiresDependencyResolution "test"}
   [
+   ^{Component {:role "org.sonatype.aether.RepositorySystem"}}
+   repoSystem
+
+   ^{Component {:role "org.apache.maven.project.ProjectBuilder"}}
+   projectBuilder
+
+   ^{Parameter {:defaultValue "${repositorySystemSession}" :readonly true}}
+   repoSystemSession
+
    ^{Parameter
      {:expression "${clojure.swank.port}" :defaultValue "4005"}}
    ^Integer
@@ -47,8 +57,12 @@
                           #(.getPath %)
                           (.getURLs (.getClassLoader clojure.lang.RT)))))]
     (core/eval-clojure
-     (core/clojure-source-paths source-directory)
-     (into (vec test-classpath-elements) ritz-artifact)
+     (into (core/clojure-source-paths source-directory)
+           (checkouts/checkout-paths
+            repoSystem repoSystemSession projectBuilder))
+     (->
+      (vec test-classpath-elements)
+      (into ritz-artifact))
      `(do
         (require '~'ritz.socket-server)
         (ritz.socket-server/start

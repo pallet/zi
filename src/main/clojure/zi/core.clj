@@ -9,11 +9,11 @@
   (string/replace filename "\\" "\\\\"))
 
 (defn absolute-filename [filename]
-  (.getPath (java.io.File. filename)))
+  (.getPath (io/file filename)))
 
 (defn filename-to-url-string
   [filename]
-  (str (.toURL (java.io.File. filename))))
+  (str (.toURL (io/file filename))))
 
 (defn classloader-for
   "Classloader for the specified files"
@@ -37,11 +37,11 @@
 (defn clj-files
   "Return a sequence of .clj files under the given base directory"
   [^String base-directory]
-  {:pre [(.. (java.io.File. base-directory) isDirectory)]}
+  {:pre [(.. (io/file base-directory) isDirectory)]}
   (filter
    (fn [^java.io.File file]
      (and (.isFile file) (.. (.getName file) (endsWith ".clj"))))
-   (file-seq (java.io.File. base-directory))))
+   (file-seq (io/file base-directory))))
 
 (defn file-to-namespace
   "Convert a filename to a namespace name"

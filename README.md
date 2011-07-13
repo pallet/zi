@@ -9,6 +9,8 @@ This is alpha quality.
  * zi:resources
  * zi:compile
  * zi:ritz
+ * zi:swank-clojure
+ * zi:test
 
 ## Install
 
@@ -56,7 +58,7 @@ The resources goal copies clojure source to the target.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.2.0</version>
+          <version>0.2.1</version>
           <executions>
             <execution>
               <id>default-resources</id>
@@ -80,7 +82,7 @@ The compile goal compiles clojure source.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.2.0</version>
+          <version>0.2.1</version>
           <executions>
             <execution>
               <id>default-compile</id>
@@ -144,6 +146,39 @@ The ritz goal starts a ritz server.
     <td>The swank encoding to use</td>
   </tr>
 </table>
+
+The ritz and swank-clojure goals both recognise sub-projects linked in a
+checkouts directory, and adds their sources and resources to the the
+classpath.
+
+### swank-clojure
+
+The swank-clojure goal starts a swank-clojure server.
+
+<table>
+  <tr>
+    <th>Property</th>
+    <th>Variable</th>
+    <th>Default</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>port</td>
+    <td>clojure.swank.port</td>
+    <td>4005</td>
+    <td>The swank server port</td>
+  </tr>
+  <tr>
+    <td>encoding</td>
+    <td>clojure.swank.encoding</td>
+    <td>iso-8859-1</td>
+    <td>The swank encoding to use</td>
+  </tr>
+</table>
+
+### test
+
+The test goal runs clojure.test tests.
 
 
 ## Zi, the builder
