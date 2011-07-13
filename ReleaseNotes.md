@@ -1,5 +1,9 @@
 # Release Notes
 
+## 0.2.2
+
+- Fix mojo/defmojo to actually read the project source paths
+
 ## 0.2.1
 
 - Add checkouts to ritz and swank-clojure goals
