@@ -73,7 +73,7 @@ you need to make sure that your clj source files end up in your jar file.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.2.2</version>
+          <version>0.3.0</version>
           <executions>
             <execution>
               <id>default-resources</id>
@@ -97,7 +97,7 @@ The compile goal AOT compiles clojure source.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.2.2</version>
+          <version>0.3.0</version>
           <executions>
             <execution>
               <id>default-compile</id>
