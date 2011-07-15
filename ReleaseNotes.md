@@ -1,5 +1,11 @@
 # Release Notes
 
+## 0.3.0
+
+- Add marginalia goal
+
+- Factor out overridable-artifact-path
+
 ## 0.2.2
 
 - Fix mojo/defmojo to actually read the project source paths
