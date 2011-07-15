@@ -20,6 +20,7 @@ This is alpha quality.
  * zi:ritz
  * zi:swank-clojure
  * zi:test
+ * zi:marginalia
 
 ## Install
 
@@ -194,6 +195,24 @@ The swank-clojure goal starts a swank-clojure server.
 
 The test goal runs clojure.test tests.
 
+### marginalia
+
+The marginalia goal creates a marginalia annotated source page.
+
+<table>
+  <tr>
+    <th>Property</th>
+    <th>Variable</th>
+    <th>Default</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>marginaliaTargetDirectory</td>
+    <td></td>
+    <td>${project.build.directory}</td>
+    <td>The directory where marginali should write uberdoc.html</td>
+  </tr>
+</table>
 
 ## Zi, the builder
 
