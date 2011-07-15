@@ -48,14 +48,9 @@
    ^String
    network]
 
-  (let [swank-artifact (when-not (core/path-on-classpath?
-                                  swank-clojure-path-regex
-                                  test-classpath-elements)
-                         (filter
-                          #(re-find swank-clojure-path-regex %)
-                          (map
-                           #(.getPath %)
-                           (.getURLs (.getClassLoader clojure.lang.RT)))))]
+  (let [swank-artifact (core/overridable-artifact-path
+                        swank-clojure-path-regex
+                        test-classpath-elements)]
     (core/eval-clojure
      (into (core/clojure-source-paths source-directory)
            (checkouts/checkout-paths

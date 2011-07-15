@@ -37,11 +37,12 @@
 (defn clj-files
   "Return a sequence of .clj files under the given base directory"
   [^String base-directory]
-  {:pre [(.. (io/file base-directory) isDirectory)]}
-  (filter
-   (fn [^java.io.File file]
-     (and (.isFile file) (.. (.getName file) (endsWith ".clj"))))
-   (file-seq (io/file base-directory))))
+  (let [base (io/file base-directory)]
+    (when (and (.exists base) (.isDirectory base))
+      (filter
+       (fn [^java.io.File file]
+         (and (.isFile file) (.. (.getName file) (endsWith ".clj"))))
+       (file-seq base)))))
 
 (defn file-to-namespace
   "Convert a filename to a namespace name"
@@ -70,3 +71,12 @@
    classpath-elements"
   [regex classpath-elements]
   (some #(re-find regex %) classpath-elements))
+
+(defn overridable-artifact-path
+  "Get the artifact path, either from the current project, or if not specified
+   there, from zi. n.b. This does not deal with the artifact's dependencies."
+  [regex project-classpath-elements]
+  (when-not (path-on-classpath? regex project-classpath-elements)
+    (filter
+     #(re-find regex %)
+     (map #(.getPath %) (.getURLs (.getClassLoader clojure.lang.RT))))))
