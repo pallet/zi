@@ -2,10 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.cloudhoist.plugin.test</groupId>
-  <artifactId>zi-compile-test</artifactId>
+  <artifactId>zi-test-test</artifactId>
   <version>test</version>
   <packaging>jar</packaging>
-  <name>compile-test</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,26 +18,24 @@
         <version>@project.version@</version>
         <executions>
           <execution>
-            <id>default-compile</id>
+            <id>default-test</id>
+            <phase>test</phase>
             <goals>
-              <goal>compile</goal>
-            </goals>
-            <configuration>
-              <excludes>
-                <exclude>**/test.clj</exclude>
-              </excludes>
-            </configuration>
-          </execution>
-          <execution>
-            <id>default-resources</id>
-            <goals>
-              <goal>resources</goal>
+              <goal>test</goal>
             </goals>
           </execution>
         </executions>
       </plugin>
       <plugin>
-	<!-- disable the java compile -->
+	<!-- disable the Surefire testing plugin -->
+	<artifactId>maven-surefire-plugin</artifactId>
+	<version>2.6</version>
+	<configuration>
+	  <skip>true</skip>
+	</configuration>
+      </plugin>
+      <plugin>
+	<!-- disable the java compiler plugin -->
 	<artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
 	<configuration>
