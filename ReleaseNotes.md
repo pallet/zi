@@ -1,5 +1,11 @@
 # Release Notes
 
+## 0.3.1
+
+- Really add marginalia goal
+
+- Add integration testing
+
 ## 0.3.0
 
 - Add marginalia goal
