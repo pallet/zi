@@ -1,5 +1,9 @@
 # Release Notes
 
+## 0.3.2
+
+- Fix resources mojo to write to target/classes
+
 ## 0.3.1
 
 - Really add marginalia goal
