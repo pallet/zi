@@ -77,6 +77,7 @@ you need to make sure that your clj source files end up in your jar file.
           <executions>
             <execution>
               <id>default-resources</id>
+              <phase>process-resources</phase>
               <goals>
                 <goal>resources</goal>
               </goals>

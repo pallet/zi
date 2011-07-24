@@ -22,7 +22,7 @@
                                              source-abs-paths))]
                        (subs path (inc (count root))))))
         cp (fn [[from to]]
-             (let [to (io/file output-directory to)
+             (let [to (io/file output-directory "classes" to)
                    parent (java.io.File. (.getParent to))]
                (when-not (.exists parent)
                  (.mkdirs parent))
