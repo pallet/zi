@@ -79,8 +79,7 @@
 
   (run-tests
    (concat
-    classpath-elements
-    (core/clojure-source-paths source-directory)
     (core/clojure-source-paths test-source-directory)
-    (vec test-classpath-elements))
+    (core/clojure-source-paths source-directory)
+    test-classpath-elements)
    test-source-directory log))
