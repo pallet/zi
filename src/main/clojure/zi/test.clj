@@ -35,31 +35,35 @@
     (classlojure/eval-in
      cl
      `(do
-        (require '~'clojure.test)
-        (defmacro ~'redef [ [& ~bindings] & ~body ]
-          (if (find-var 'clojure.core/with-redefs)
-            `(with-redefs [~@~bindings] ~@~body)
-            `(binding [~@~bindings] ~@~body)))))
+        (require 'clojure.main)
+        (clojure.main/with-bindings
+          (require '~'clojure.test)
+          (defmacro ~'redef [ [& ~bindings] & ~body ]
+            (if (find-var 'clojure.core/with-redefs)
+              `(with-redefs [~@~bindings] ~@~body)
+              `(binding [~@~bindings] ~@~body))))))
     (let [results (classlojure/eval-in
                    cl
-                   `(let [results# (atom [])
-                          original-report# clojure.test/report
-                          report# (fn [m#]
-                                    (original-report# m#)
-                                    (swap!
-                                     results# conj
-                                     (-> m#
-                                       (update-in
-                                        [:actual] #(when % (pr-str %)))
-                                       (update-in
-                                        [:ns] #(when %
-                                                 (list `quote (ns-name %)))))))]
-                      (~'redef
-                       [clojure.test/report report#]
-                       (binding [clojure.test/*test-out* *out*]
-                         (require ~@test-ns-symbols)
-                         (clojure.test/run-tests ~@test-ns-symbols)))
-                      @results#))
+                   `(clojure.main/with-bindings
+                      (let [results# (atom [])
+                            original-report# clojure.test/report
+                            report# (fn [m#]
+                                      (original-report# m#)
+                                      (swap!
+                                       results# conj
+                                       (-> m#
+                                           (update-in
+                                            [:actual] #(when % (pr-str %)))
+                                           (update-in
+                                            [:ns] #(when %
+                                                     (list
+                                                      `quote (ns-name %)))))))]
+                        (~'redef
+                         [clojure.test/report report#]
+                         (binding [clojure.test/*test-out* *out*]
+                           (require ~@test-ns-symbols)
+                           (clojure.test/run-tests ~@test-ns-symbols)))
+                        @results#)))
           passes (dec (count (map :pass results)))
           summary (last results)]
       (.info
