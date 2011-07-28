@@ -11,7 +11,7 @@ locate source, which by default means that it uses `src/main/clojure` and
 
 From an implementation perspecitve, most of the goals are written in clojure.
 
-This is alpha quality.
+This is alpha quality. It requires maven 3.0.3.
 
 ## Available goals
 
