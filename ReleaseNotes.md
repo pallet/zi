@@ -1,5 +1,13 @@
 # Release Notes
 
+## 0.3.3
+
+- Ensure tests run inside a clojure.main/with-bindings
+  Code that calls set! on common rebindable vars (such as
+  *warn-on-reflection*) fails otherwise
+
+- Fix the classpath elements used in ritz and test
+
 ## 0.3.2
 
 - Fix resources mojo to write to target/classes
