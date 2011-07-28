@@ -52,9 +52,11 @@
         ritz-artifact (core/overridable-artifact-path
                        ritz-path-regex test-classpath-elements)]
     (core/eval-clojure
-     (into (core/clojure-source-paths source-directory)
-           (checkouts/checkout-paths
-            repoSystem repoSystemSession projectBuilder))
+     (->
+      (core/clojure-source-paths source-directory)
+      (into (core/clojure-source-paths test-source-directory))
+      (into (checkouts/checkout-paths
+             repoSystem repoSystemSession projectBuilder)))
      (->
       (vec test-classpath-elements)
       (into ritz-artifact))
