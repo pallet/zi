@@ -54,6 +54,18 @@ To globally enable the zi plugin, you need to add `pluginGroup` and
     </activeProfiles>
 ```
 
+To enable zi in a project pom, without globally enabling the plugin, you will
+need to add a `pluginRepositories` entry to your pom:
+
+```xml
+    <pluginRepositories>
+      <pluginRepository>
+        <id>sonatype-snapshots</id>
+        <url>http://oss.sonatype.org/content/repositories/releases</url>
+      </pluginRepository>
+    </pluginRepositories>
+```
+
 ## Configuration
 
 It uses the maven pom `sourceDirectory` and `testSourceDirectory` settings to
