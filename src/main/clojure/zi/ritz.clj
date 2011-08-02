@@ -41,30 +41,42 @@
    ^{Parameter
      {:expression "${clojure.swank.network}" :defaultValue "localhost"}}
    ^String
-   network]
+   network
 
-  (let [tmpfile (try
-                  (File/createTempFile "swank" ".port")
-                  (catch java.io.IOException e
-                    (throw
-                     (MojoExecutionException.
-                      "Could not create swank port file" e))))
-        ritz-artifact (core/overridable-artifact-path
-                       ritz-path-regex test-classpath-elements)]
-    (core/eval-clojure
-     (->
-      (core/clojure-source-paths source-directory)
-      (into (core/clojure-source-paths test-source-directory))
-      (into (checkouts/checkout-paths
-             repoSystem repoSystemSession projectBuilder)))
-     (->
-      (vec test-classpath-elements)
-      (into ritz-artifact))
-     `(do
-        (require '~'ritz.socket-server)
-        (ritz.socket-server/start
-         {:port-file ~(.getPath tmpfile)
-          :host ~network
-          :port ~(Integer/parseInt port)
-          :encoding ~encoding
-          :dont-close true})))))
+   ^{Parameter
+     {:defaultValue "${project.packaging}" :required true}}
+   ^String
+   packaging]
+
+  (.info log (format "packaging %s" (pr-str packaging)))
+  (if (= packaging "pom")
+    (.info log "Ritz can not be run on a project with pom packaging")
+    (let [tmpfile (try
+                    (File/createTempFile "swank" ".port")
+                    (catch java.io.IOException e
+                      (throw
+                       (MojoExecutionException.
+                        "Could not create swank port file" e))))
+          ritz-artifact (core/overridable-artifact-path
+                         ritz-path-regex test-classpath-elements)
+          source-paths (->
+                        (core/clojure-source-paths source-directory)
+                        (into (core/clojure-source-paths test-source-directory))
+                        (into (checkouts/checkout-paths
+                               repoSystem repoSystemSession projectBuilder)))
+          classpath-elements (->
+                              (vec test-classpath-elements)
+                              (into ritz-artifact))]
+      (.debug log (format "source paths: %s" (vec source-paths)))
+      (.debug log (format "classpath elements: %s" (vec classpath-elements)))
+      (core/eval-clojure
+       source-paths
+       classpath-elements
+       `(do
+          (require '~'ritz.socket-server)
+          (ritz.socket-server/start
+           {:port-file ~(.getPath tmpfile)
+            :host ~network
+            :port ~(Integer/parseInt port)
+            :encoding ~encoding
+            :dont-close true}))))))
