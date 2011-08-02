@@ -10,7 +10,7 @@
     Goal RequiresDependencyResolution Parameter Component]))
 
 (defn copy-sources
-  [source-directory output-directory]
+  [source-directory output-directory sub-path]
   (let [source-paths (core/clojure-source-paths source-directory)
         source-abs-paths (map
                           #(.getAbsolutePath (java.io.File. %))
@@ -22,7 +22,7 @@
                                              source-abs-paths))]
                        (subs path (inc (count root))))))
         cp (fn [[from to]]
-             (let [to (io/file output-directory "classes" to)
+             (let [to (io/file output-directory sub-path to)
                    parent (java.io.File. (.getParent to))]
                (when-not (.exists parent)
                  (.mkdirs parent))
@@ -48,4 +48,15 @@
    #=(mojo/parameter
       excludes "Which source files not to copy"
       :typename "java.util.LinkedList")]
-  (copy-sources source-directory output-directory))
+  (copy-sources source-directory output-directory "classes"))
+
+(mojo/defmojo TestResource
+  {Goal "testResources"
+   Phase "process-test-resources"}
+  [#=(mojo/parameter
+      includes "Which source files to copy"
+      :typename "java.util.LinkedList")
+   #=(mojo/parameter
+      excludes "Which source files not to copy"
+      :typename "java.util.LinkedList")]
+  (copy-sources test-source-directory output-directory "test-classes"))
