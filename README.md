@@ -11,11 +11,12 @@ locate source, which by default means that it uses `src/main/clojure` and
 
 From an implementation perspecitve, most of the goals are written in clojure.
 
-This is alpha quality.
+This is alpha quality. It requires maven 3.0.3.
 
 ## Available goals
 
  * zi:resources
+ * zi:testResources
  * zi:compile
  * zi:ritz
  * zi:swank-clojure
@@ -54,6 +55,18 @@ To globally enable the zi plugin, you need to add `pluginGroup` and
     </activeProfiles>
 ```
 
+To enable zi in a project pom, without globally enabling the plugin, you will
+need to add a `pluginRepositories` entry to your pom:
+
+```xml
+    <pluginRepositories>
+      <pluginRepository>
+        <id>sonatype-snapshots</id>
+        <url>http://oss.sonatype.org/content/repositories/releases</url>
+      </pluginRepository>
+    </pluginRepositories>
+```
+
 ## Configuration
 
 It uses the maven pom `sourceDirectory` and `testSourceDirectory` settings to
@@ -62,7 +75,7 @@ locate source, which by default means that it uses `src/main/clojure` and
 
 ## Goals
 
-### resource
+### resources
 
 The resources goal copies clojure source to the target. This is probably what
 you need to make sure that your clj source files end up in your jar file.
@@ -73,13 +86,40 @@ you need to make sure that your clj source files end up in your jar file.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.3.3</version>
+          <version>0.3.4</version>
           <executions>
             <execution>
               <id>default-resources</id>
               <phase>process-resources</phase>
               <goals>
                 <goal>resources</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </build>
+```
+
+### testResources
+
+The testResources goal copies clojure test source to the target. This is
+probably what you need to make sure that your clj source files end up in your
+test-jar file.
+
+```xml
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>org.cloudhoist.plugin</groupId>
+          <artifactId>zi</artifactId>
+          <version>0.3.4</version>
+          <executions>
+            <execution>
+              <id>default-test-resources</id>
+              <phase>process-test-resources</phase>
+              <goals>
+                <goal>test-resources</goal>
               </goals>
             </execution>
           </executions>
@@ -98,7 +138,7 @@ The compile goal AOT compiles clojure source.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.3.3</version>
+          <version>0.3.4</version>
           <executions>
             <execution>
               <id>default-compile</id>

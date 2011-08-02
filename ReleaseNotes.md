@@ -1,5 +1,13 @@
 # Release Notes
 
+## 0.3.4
+
+- Throw a MojoFailureException when tests fail
+
+- Don't run ritz on pom packaged projects
+
+- Add testResources goal
+
 ## 0.3.3
 
 - Ensure tests run inside a clojure.main/with-bindings

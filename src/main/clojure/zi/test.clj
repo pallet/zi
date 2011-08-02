@@ -70,7 +70,10 @@
        log
        (format
         "Tests run: %d, passed: %d, failed: %d, errors: %d"
-        (:test summary) (:pass summary) (:fail summary) (:error summary))))))
+        (:test summary) (:pass summary) (:fail summary) (:error summary)))
+      (when (or (pos? (:fail summary)) (pos? (:error summary)))
+        (throw
+         (org.apache.maven.plugin.MojoFailureException. "Tests failed"))))))
 
 (mojo/defmojo ClojureTest
   {Goal "test"
