@@ -32,48 +32,49 @@
         test-ns-list (find-tests
                       (core/clojure-source-paths test-source-directory))
         test-ns-symbols (map #(list `quote (symbol %)) test-ns-list)]
-    (classlojure/eval-in
-     cl
-     `(do
-        (require 'clojure.main)
-        (clojure.main/with-bindings
-          (require '~'clojure.test)
-          (defmacro ~'redef [ [& ~bindings] & ~body ]
-            (if (find-var 'clojure.core/with-redefs)
-              `(with-redefs [~@~bindings] ~@~body)
-              `(binding [~@~bindings] ~@~body))))))
-    (let [results (classlojure/eval-in
-                   cl
-                   `(clojure.main/with-bindings
-                      (let [results# (atom [])
-                            original-report# clojure.test/report
-                            report# (fn [m#]
-                                      (original-report# m#)
-                                      (swap!
-                                       results# conj
-                                       (-> m#
-                                           (update-in
-                                            [:actual] #(when % (pr-str %)))
-                                           (update-in
-                                            [:ns] #(when %
-                                                     (list
-                                                      `quote (ns-name %)))))))]
-                        (~'redef
-                         [clojure.test/report report#]
-                         (binding [clojure.test/*test-out* *out*]
-                           (require ~@test-ns-symbols)
-                           (clojure.test/run-tests ~@test-ns-symbols)))
-                        @results#)))
-          passes (dec (count (map :pass results)))
-          summary (last results)]
-      (.info
-       log
-       (format
-        "Tests run: %d, passed: %d, failed: %d, errors: %d"
-        (:test summary) (:pass summary) (:fail summary) (:error summary)))
-      (when (or (pos? (:fail summary)) (pos? (:error summary)))
-        (throw
-         (org.apache.maven.plugin.MojoFailureException. "Tests failed"))))))
+    (when (seq test-ns-symbols)
+      (classlojure/eval-in
+       cl
+       `(do
+          (require 'clojure.main)
+          (clojure.main/with-bindings
+            (require '~'clojure.test)
+            (defmacro ~'redef [ [& ~bindings] & ~body ]
+              (if (find-var 'clojure.core/with-redefs)
+                `(with-redefs [~@~bindings] ~@~body)
+                `(binding [~@~bindings] ~@~body))))))
+      (let [results (classlojure/eval-in
+                     cl
+                     `(clojure.main/with-bindings
+                        (let [results# (atom [])
+                              original-report# clojure.test/report
+                              report# (fn [m#]
+                                        (original-report# m#)
+                                        (swap!
+                                         results# conj
+                                         (-> m#
+                                             (update-in
+                                              [:actual] #(when % (pr-str %)))
+                                             (update-in
+                                              [:ns] #(when %
+                                                       (list
+                                                        `quote (ns-name %)))))))]
+                          (~'redef
+                           [clojure.test/report report#]
+                           (binding [clojure.test/*test-out* *out*]
+                             (require ~@test-ns-symbols)
+                             (clojure.test/run-tests ~@test-ns-symbols)))
+                          @results#)))
+            passes (dec (count (map :pass results)))
+            summary (last results)]
+        (.info
+         log
+         (format
+          "Tests run: %d, passed: %d, failed: %d, errors: %d"
+          (:test summary) (:pass summary) (:fail summary) (:error summary)))
+        (when (or (pos? (:fail summary)) (pos? (:error summary)))
+          (throw
+           (org.apache.maven.plugin.MojoFailureException. "Tests failed")))))))
 
 (mojo/defmojo ClojureTest
   {Goal "test"
@@ -82,11 +83,17 @@
      {:expression "${clojure.test-ns}" :defaultValue ""
       :description "List of namespaces to run tests for"}}
    ^String
-   namespaces]
+   namespaces
+   ^{Parameter
+     {:expression "${skipTests}" :defaultValue "false"
+      :description "Skip test execution"}}
+   ^bool
+   skipTests]
 
-  (run-tests
-   (concat
-    (core/clojure-source-paths test-source-directory)
-    (core/clojure-source-paths source-directory)
-    test-classpath-elements)
-   test-source-directory log))
+  (when-not skipTests
+    (run-tests
+     (concat
+      (core/clojure-source-paths test-source-directory)
+      (core/clojure-source-paths source-directory)
+      test-classpath-elements)
+     test-source-directory log)))
