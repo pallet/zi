@@ -80,3 +80,21 @@
     (filter
      #(re-find regex %)
      (map #(.getPath %) (.getURLs (.getClassLoader clojure.lang.RT))))))
+
+(defn source-jar
+  "Return the path to the source jar if it exists."
+  [path]
+  (if-let [[p basename] (re-matches #"(.*).jar" path)]
+    (let [file (io/file (str basename "-sources.jar"))]
+      (when (.canRead file)
+        (.getPath file)))))
+
+(defn classpath-with-source-jars
+  "Try adding source code jars to the classpath"
+  [classpath-elements]
+  (concat
+   classpath-elements
+   (->>
+    classpath-elements
+    (map source-jar)
+    (filter identity))))
