@@ -48,7 +48,6 @@
    ^String
    packaging]
 
-  (.info log (format "packaging %s" (pr-str packaging)))
   (if (= packaging "pom")
     (.info log "Ritz can not be run on a project with pom packaging")
     (let [tmpfile (try
