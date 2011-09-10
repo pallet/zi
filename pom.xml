@@ -9,7 +9,7 @@
 
   <groupId>org.cloudhoist.plugin</groupId>
   <artifactId>zi</artifactId>
-  <version>0.3.5-SNAPSHOT</version>
+  <version>0.3.6-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>zi</name>
@@ -217,6 +217,14 @@
   </dependencies>
 
   <repositories>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>sonatype-nexus-releases</id>
+      <name>Sonatype Nexus Releases</name>
+      <url>http://oss.sonatype.org/content/repositories/releases</url>
+    </repository>
     <repository>
       <id>clojars</id>
       <url>http://clojars.org/repo</url>

@@ -48,7 +48,6 @@
    ^String
    packaging]
 
-  (.info log (format "packaging %s" (pr-str packaging)))
   (if (= packaging "pom")
     (.info log "Ritz can not be run on a project with pom packaging")
     (let [tmpfile (try
@@ -71,7 +70,7 @@
       (.debug log (format "classpath elements: %s" (vec classpath-elements)))
       (core/eval-clojure
        source-paths
-       classpath-elements
+       (core/classpath-with-source-jars classpath-elements)
        `(do
           (require '~'ritz.socket-server)
           (ritz.socket-server/start
