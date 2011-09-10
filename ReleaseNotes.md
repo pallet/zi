@@ -1,5 +1,19 @@
 # Release Notes
 
+## 0.3.5
+
+### Features
+
+- Honour skipTests, and fix for case when no tests defined
+
+- Add available source jars to classpath
+
+### Fixes
+- Remove superfluous log statement
+
+- Add sonatype repository to pom
+
+
 ## 0.3.4
 
 - Throw a MojoFailureException when tests fail
