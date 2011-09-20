@@ -84,13 +84,16 @@
       :description "List of namespaces to run tests for"}}
    ^String
    namespaces
-   ^{Parameter
-     {:expression "${skipTests}" :defaultValue "false"
-      :description "Skip test execution"}}
-   ^bool
-   skipTests]
 
-  (when-not skipTests
+   ^{Parameter
+     {:expression "${skipTests}"
+      :description "Skip test execution"
+      :alias "skipTests"
+      :defaultValue "false"
+      :typename "boolean"}}
+   skip-tests]
+
+  (when-not ({"true" true "false" false} skip-tests)
     (run-tests
      (concat
       (core/clojure-source-paths test-source-directory)

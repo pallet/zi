@@ -1,5 +1,11 @@
 # Release Notes
 
+## 0.3.6
+
+- Fix skipTests handling in test mojo
+
+### Fixes
+
 ## 0.3.5
 
 ### Features
