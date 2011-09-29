@@ -86,7 +86,7 @@ you need to make sure that your clj source files end up in your jar file.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.3.6</version>
+          <version>0.3.7</version>
           <executions>
             <execution>
               <id>default-resources</id>
@@ -113,7 +113,7 @@ test-jar file.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.3.6</version>
+          <version>0.3.7</version>
           <executions>
             <execution>
               <id>default-test-resources</id>
@@ -138,7 +138,7 @@ The compile goal AOT compiles clojure source.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.3.6</version>
+          <version>0.3.7</version>
           <executions>
             <execution>
               <id>default-compile</id>
@@ -235,6 +235,21 @@ The swank-clojure goal starts a swank-clojure server.
 ### test
 
 The test goal runs clojure.test tests.
+
+<table>
+  <tr>
+    <th>Property</th>
+    <th>Variable</th>
+    <th>Default</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>initScript</td>
+    <td>clojure.initScript</td>
+    <td></td>
+    <td>A clojure source string that is run before the tests</td>
+  </tr>
+</table>
 
 ### marginalia
 

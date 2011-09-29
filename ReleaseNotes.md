@@ -1,5 +1,12 @@
 # Release Notes
 
+## 0.3.7
+
+- Remove class files from final jar
+  The mojo extractor was creating class files that were packaged.
+
+- Add initScript property for test target
+
 ## 0.3.6
 
 - Fix skipTests handling in test mojo
