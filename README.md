@@ -236,6 +236,21 @@ The swank-clojure goal starts a swank-clojure server.
 
 The test goal runs clojure.test tests.
 
+<table>
+  <tr>
+    <th>Property</th>
+    <th>Variable</th>
+    <th>Default</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>initScript</td>
+    <td>clojure.initScript</td>
+    <td></td>
+    <td>A clojure source string that is run before the tests</td>
+  </tr>
+</table>
+
 ### marginalia
 
 The marginalia goal creates a marginalia annotated source page.

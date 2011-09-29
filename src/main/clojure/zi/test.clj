@@ -25,7 +25,7 @@
                    (:message result "") (:expected result) (:actual result))))
 
 (defn run-tests
-  [classpath-elements test-source-directory log]
+  [classpath-elements test-source-directory log init-script]
   (let [cl (core/classloader-for classpath-elements)
         bindings (gensym "bindings")
         body (gensym "body")
@@ -36,6 +36,7 @@
       (classlojure/eval-in
        cl
        `(do
+          ~(when init-script (read-string init-script))
           (require 'clojure.main)
           (clojure.main/with-bindings
             (require '~'clojure.test)
@@ -99,4 +100,5 @@
       (core/clojure-source-paths test-source-directory)
       (core/clojure-source-paths source-directory)
       test-classpath-elements)
-     test-source-directory log)))
+     test-source-directory log
+     init-script)))

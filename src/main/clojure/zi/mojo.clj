@@ -54,6 +54,12 @@
                       "Project target directory"
                       :expression "${project.build.directory}"
                       :required true :readonly true)
+          ~(parameter 'init-script
+                      "Code to run before the target"
+                      :alias "initScript"
+                      :typename "java.lang.String"
+                      :default ""
+                      :required false :readonly true)
           ~(vary-meta 'log assoc :volatile-mutable true)
           ~'plugin-context]
 
@@ -67,4 +73,4 @@
        (~'setPluginContext [_# context#] (reset! ~'plugin-context context#))
        (~'getPluginContext [_#] (deref ~'plugin-context)))
      (defn ~(symbol (str "make-" (name mojo-name))) []
-       (new ~mojo-name ~@(repeat (+ (count fields) 8) nil) (atom nil)))))
+       (new ~mojo-name ~@(repeat (+ (count fields) 9) nil) (atom nil)))))
