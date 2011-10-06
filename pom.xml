@@ -96,6 +96,9 @@
           <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
           <postBuildHookScript>verify.bsh</postBuildHookScript>
           <debug>false</debug>
+          <properties>
+            <clojure.version>${clojure.version}</clojure.version>
+          </properties>
         </configuration>
         <executions>
           <execution>

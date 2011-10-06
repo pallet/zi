@@ -52,7 +52,7 @@
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>clojure</artifactId>
-      <version>1.2.1</version>
+      <version>${clojure.version}</version>
     </dependency>
   </dependencies>
 </project>
