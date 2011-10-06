@@ -1,5 +1,11 @@
 # Release Notes
 
+## 0.3.9
+
+- Fix an issue preventing the test task from working in clojure-1.3.0
+  The form passed for portable-redef was being quoted in clojure-1.2, and
+  run in 1.3. The quoting was adding zi.test to the with-redefs symbol.
+
 ## 0.3.8
 
 - Update for classlojure 0.6.1
