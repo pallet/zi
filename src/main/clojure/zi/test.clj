@@ -2,7 +2,8 @@
   "Run tests"
   (:require
    [zi.mojo :as mojo]
-   [zi.core :as core])
+   [zi.core :as core]
+   [classlojure.core :as classlojure])
   (:import
    java.io.File
    [clojure.maven.annotations

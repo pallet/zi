@@ -3,7 +3,7 @@
   (:require
    [clojure.java.io :as io]
    [clojure.string :as string]
-   classlojure))
+   [classlojure.core :as classlojure]))
 
 (defn escape-filename [filename]
   (string/replace filename "\\" "\\\\"))
@@ -61,10 +61,13 @@
      (map file-to-namespace))))
 
 (defn clojure-source-paths
-  [source-directory]
-  (if (.endsWith source-directory "/java")
-    [(string/replace source-directory #"/java$" "/clojure") source-directory]
-    [source-directory]))
+  ([source-directory language]
+     (if (.endsWith source-directory "/java")
+       [(string/replace
+         source-directory #"/java$" (str "/" language)) source-directory]
+       [source-directory]))
+  ([source-directory]
+     (clojure-source-paths source-directory "clojure")))
 
 (defn path-on-classpath?
   "Predicate to test whether a path matching the supplied regex is in the

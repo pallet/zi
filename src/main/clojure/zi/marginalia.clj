@@ -54,8 +54,7 @@
    marginalia-target-directory
    ^{Parameter
      {:expression "${project}"
-      :description "Where to write marginalia output"}}
-   ^String
+      :description "Project"}}
    project]
 
   (run-marginalia

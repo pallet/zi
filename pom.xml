@@ -9,7 +9,7 @@
 
   <groupId>org.cloudhoist.plugin</groupId>
   <artifactId>zi</artifactId>
-  <version>0.3.8-SNAPSHOT</version>
+  <version>0.3.9-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>zi</name>
@@ -57,7 +57,7 @@
           <dependency>
             <groupId>org.cloudhoist</groupId>
             <artifactId>clojure-maven-mojo-descriptor-extractor</artifactId>
-            <version>${clojureMavenVersion}</version>
+            <version>${clojureMaven.version}</version>
           </dependency>
         </dependencies>
       </plugin>
@@ -114,13 +114,13 @@
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>clojure</artifactId>
-      <version>1.2.1</version>
+      <version>${clojure.version}</version>
     </dependency>
 
     <dependency>
       <groupId>classlojure</groupId>
       <artifactId>classlojure</artifactId>
-      <version>0.5.2</version>
+      <version>0.6.1</version>
     </dependency>
 
     <dependency>
@@ -144,41 +144,41 @@
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-plugin-api</artifactId>
-      <version>${mavenVersion}</version>
+      <version>${maven.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-core</artifactId>
-      <version>${mavenVersion}</version>
+      <version>${maven.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.sonatype.aether</groupId>
       <artifactId>aether-api</artifactId>
-      <version>${aetherVersion}</version>
+      <version>${aether.version}</version>
     </dependency>
     <dependency>
       <groupId>org.sonatype.aether</groupId>
       <artifactId>aether-util</artifactId>
-      <version>${aetherVersion}</version>
+      <version>${aether.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.cloudhoist</groupId>
       <artifactId>clojure-maven-mojo-annotations</artifactId>
-      <version>${clojureMavenVersion}</version>
+      <version>${clojureMaven.version}</version>
     </dependency>
     <dependency>
       <groupId>org.cloudhoist</groupId>
       <artifactId>clojure-maven-plexus-component-factory</artifactId>
-      <version>${clojureMavenVersion}</version>
+      <version>${clojureMaven.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.cloudhoist</groupId>
       <artifactId>clojure-maven-plexus-compiler</artifactId>
-      <version>${clojureMavenVersion}</version>
+      <version>${clojureMaven.version}</version>
     </dependency>
 
     <dependency>
@@ -283,8 +283,9 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <mavenVersion>3.0.3</mavenVersion>
-    <aetherVersion>1.11</aetherVersion>
-    <clojureMavenVersion>0.3.1</clojureMavenVersion>
+    <maven.version>3.0.3</maven.version>
+    <aether.version>1.11</aether.version>
+    <clojureMaven.version>0.3.1</clojureMaven.version>
+    <clojure.version>1.2.1</clojure.version>
   </properties>
 </project>
