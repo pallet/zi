@@ -1,5 +1,9 @@
 # Release Notes
 
+## 0.3.8
+
+- Update for classlojure 0.6.1
+
 ## 0.3.7
 
 - Remove class files from final jar
