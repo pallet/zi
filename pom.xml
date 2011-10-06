@@ -9,7 +9,7 @@
 
   <groupId>org.cloudhoist.plugin</groupId>
   <artifactId>zi</artifactId>
-  <version>0.3.9-SNAPSHOT</version>
+  <version>0.3.10-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>zi</name>
