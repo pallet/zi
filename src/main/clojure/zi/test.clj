@@ -73,10 +73,11 @@
                        (binding [clojure.test/*test-out* *out*]
                          (require ~@test-ns-symbols)
                          (clojure.test/run-tests ~@test-ns-symbols)))
-                      @results#))))
+                      (map #(update-in % [:message] str) @results#)))))
              *out* *err*)
             passes (dec (count (map :pass results)))
             summary (last results)]
+        (.debug log (pr-str results))
         (.info
          log
          (format
