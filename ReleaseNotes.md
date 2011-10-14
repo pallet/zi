@@ -1,5 +1,9 @@
 # Release Notes
 
+## 0.3.10
+
+- Fix for non-string used as a test message crashing zi:test
+
 ## 0.3.9
 
 - Fix an issue preventing the test task from working in clojure-1.3.0
