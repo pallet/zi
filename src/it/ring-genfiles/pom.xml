@@ -28,6 +28,7 @@
               <ringServletClass>zitest.Servlet</ringServletClass>
               <ringServletName>zi-servlet</ringServletName>
               <ringListenerClass>zitest.Listener</ringListenerClass>
+              <ringInit>zitest.web/init</ringInit>
               <ringHandler>zitest.web/handler</ringHandler>
             </configuration>
           </execution>

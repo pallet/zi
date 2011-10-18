@@ -4,3 +4,5 @@
 (defn handler
   [req]
   req)
+
+(defn init [])

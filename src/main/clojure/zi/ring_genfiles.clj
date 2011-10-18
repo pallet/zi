@@ -21,13 +21,13 @@ The code is based on the
 
 ;; Adapted from the lein-ring plugin
 (defn listener-source
-  [listener-class ring-init ring-destroy]
-  (let [init-sym (and ring-init (read-string ring-init))
-        destroy-sym (and ring-destroy (read-string ring-destroy))
+  [listener-class init destroy]
+  (let [init-sym (and init (read-string init))
+        destroy-sym (and destroy (read-string destroy))
         init-ns (and init-sym (symbol (namespace init-sym)))
         destroy-ns (and destroy-sym (symbol (namespace destroy-sym)))
         listener-ns (symbol (read-string listener-class))]
-    (when (or ring-init ring-destroy)
+    (when (or init destroy)
       `(do
          (ns ~listener-ns
            (:require ~@(distinct (remove nil? [init-ns destroy-ns])))
@@ -67,11 +67,11 @@ The code is based on the
 (defn webxml-source
   "Generate the webxml and return its string representation"
   [{:keys
-    [ring-init ring-destroy listener-class handler servlet-class url-pattern]}]
+    [init destroy listener-class handler servlet-class url-pattern]}]
   (with-out-str
     (prxml/prxml
      [:web-app
-      (when (or ring-init ring-destroy)
+      (when (or init destroy)
         [:listener
          [:listener-class listener-class]])
       [:servlet
