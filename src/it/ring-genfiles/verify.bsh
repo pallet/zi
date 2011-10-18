@@ -1,0 +1,13 @@
+import java.io.*;
+
+File file = new File( basedir, "target/classes/zitest/Servlet.class" );
+
+if ( !file.exists() ) {
+    throw new FileNotFoundException( "Could not find ring-genfiles output: " + file );
+}
+
+file = new File( basedir, "target/zi-ring-genfiles/web.xml" );
+
+if ( !file.exists() ) {
+    throw new FileNotFoundException( "Could not find ring-genfiles output: " + file );
+}

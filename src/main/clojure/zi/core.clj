@@ -52,6 +52,14 @@
       (string/replace "_" "-")
       (string/replace "/" ".")))
 
+(defn namespace-to-file
+  "Convert a namespace to a path to a clojure source file (.clj)"
+  [a-ns]
+  (-> (str a-ns)
+      (string/replace "-" "_")
+      (string/replace "." "/")
+      (str ".clj")))
+
 (defn find-namespaces
   [base-directory]
   (let [offset (inc (count base-directory))]

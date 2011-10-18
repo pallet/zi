@@ -1,5 +1,13 @@
 (ns zi.ring-genfiles
-  "Generate files necessary to build a war using exported properties of lein-ring plugin."
+  "Generate files necessary to build a war. The file generation is controlled
+by properties, that match those used by the lein-ring plugin, with the aim
+of facilitating maven builds of lein projects using this plugin.
+
+The properties of lein-ring plugin maybe generated with `lein pom`, using the
+companion lein plugin for this task.
+
+The code is based on the
+[lein-ring plugin](https://github.com/weavejester/lein-ring/)."
   (:require
    [zi.mojo :as mojo]
    [zi.core :as core]
@@ -11,103 +19,117 @@
    [clojure.maven.annotations
     Goal RequiresDependencyResolution Parameter Component]))
 
-
-;;  Adapted from the lein-ring plugin : https://github.com/weavejester/lein-ring/
-(defn generate-listener
+;; Adapted from the lein-ring plugin
+(defn listener-source
   [listener-class ring-init ring-destroy]
-  (let [  init-sym    (and ring-init (read-string ring-init))
-          destroy-sym (and ring-destroy (read-string ring-destroy))
-          init-ns     (and init-sym    (symbol (namespace init-sym)))
-          destroy-ns  (and destroy-sym (symbol (namespace destroy-sym)))
-          listener-ns  (symbol (read-string listener-class))]
-    `(do (ns ~listener-ns
-                 (:require ~@(set (remove nil? [init-ns destroy-ns])))
-                 (:gen-class :implements [javax.servlet.ServletContextListener]))
-               ~(let [servlet-context-event (gensym)]
-                  `(do
-                     (defn ~'-contextInitialized [this# ~servlet-context-event]
-                       ~(if init-sym
-                          `(~init-sym)))
-                     (defn ~'-contextDestroyed [this# ~servlet-context-event]
-                       ~(if destroy-sym
-                          `(~destroy-sym))))))))
+  (let [init-sym (and ring-init (read-string ring-init))
+        destroy-sym (and ring-destroy (read-string ring-destroy))
+        init-ns (and init-sym (symbol (namespace init-sym)))
+        destroy-ns (and destroy-sym (symbol (namespace destroy-sym)))
+        listener-ns (symbol (read-string listener-class))]
+    (when (or ring-init ring-destroy)
+      `(do
+         (ns ~listener-ns
+           (:require ~@(distinct (remove nil? [init-ns destroy-ns])))
+           (:gen-class :implements [javax.servlet.ServletContextListener]))
+         ~(let [servlet-context-event (gensym)]
+            `(do
+               (defn ~'-contextInitialized [this# ~servlet-context-event]
+                 ~(when init-sym
+                    `(~init-sym)))
+               (defn ~'-contextDestroyed [this# ~servlet-context-event]
+                 ~(when destroy-sym
+                    `(~destroy-sym)))))))))
 
-;;  Adapted from the lein-ring plugin : https://github.com/weavejester/lein-ring/
-(defn generate-handler [handler-sym]
+;; Adapted from the lein-ring plugin
+(defn handler-source
+  [handler-sym]
   `(fn [request#]
-      (~handler-sym
-        (assoc request#
-          :path-info (.getPathInfo (:servlet-request request#))
-          :context   (.getContextPath (:servlet-request request#)))))
+     (~handler-sym
+      (assoc request#
+        :path-info (.getPathInfo (:servlet-request request#))
+        :context (.getContextPath (:servlet-request request#)))))
   handler-sym)
 
-;;  Adapted from the lein-ring plugin : https://github.com/weavejester/lein-ring/
-(defn gen-servlet
+;; Adapted from the lein-ring plugin
+(defn servlet-source
   [servlet-class handler]
   (let [handler-sym (read-string handler)
-        handler-ns  (symbol (namespace handler-sym))
-        servlet-ns  (symbol (read-string servlet-class))]
+        handler-ns (symbol (namespace handler-sym))
+        servlet-ns (symbol (read-string servlet-class))]
+    `(do (ns ~servlet-ns
+           (:require ring.util.servlet ~handler-ns)
+           (:gen-class :extends javax.servlet.http.HttpServlet))
+         (ring.util.servlet/defservice
+           ~(handler-source handler-sym)))))
 
-      `(do (ns ~servlet-ns
-             (:require ring.util.servlet ~handler-ns)
-             (:gen-class :extends javax.servlet.http.HttpServlet))
-           (ring.util.servlet/defservice
-             ~(generate-handler handler-sym)))))
-
-(def url-pattern #(or % "/*"))
-
-;;  Adapted from the lein-ring plugin : https://github.com/weavejester/lein-ring/
-(defn gen-webxml
- "Generate the webxml and return its string representation"
- [params]
- (with-out-str
-   (prxml/prxml
+;; Adapted from the lein-ring plugin
+(defn webxml-source
+  "Generate the webxml and return its string representation"
+  [{:keys
+    [ring-init ring-destroy listener-class handler servlet-class url-pattern]}]
+  (with-out-str
+    (prxml/prxml
      [:web-app
-       [:listener
-         [:listener-class (:listener-class params)]]
-       [:servlet
-         [:servlet-name  (:handler params)]
-         [:servlet-class (:servlet-class params)]]
-       [:servlet-mapping
-         [:servlet-name (:handler params)]
-         [:url-pattern (url-pattern (:url-pattern params))]]])))
+      (when (or ring-init ring-destroy)
+        [:listener
+         [:listener-class listener-class]])
+      [:servlet
+       [:servlet-name  handler]
+       [:servlet-class servlet-class]]
+      [:servlet-mapping
+       [:servlet-name handler ]
+       [:url-pattern (or url-pattern "/*")]]])))
 
-(def webxml-path #(str % "/web.xml"))
-(def gen-dir #(str % "/gen-src/"))
-(def gen-sources-dir #(str (gen-dir %) "clj/"))
+(defn resource-path
+  [root]
+  (str root "/zi-ring-genfiles/"))
+
+(defn webxml-path
+  [root]
+  (str (resource-path root) "web.xml"))
+
+(defn gen-dir
+  [base]
+  (str base "/gen-src/"))
+
+(defn gen-sources-dir
+  [base]
+  (str (gen-dir base) "clj/"))
+
+(defn mkpath
+  [filename]
+  (.mkdirs (.getParentFile (File. filename))))
 
 (defn write-webxml
   "Write the web.xml file"
   [params]
-  (let [webxml-filename  (webxml-path (:build-dir params))]
-    (spit webxml-filename (gen-webxml params))))
-
-(defn ns-to-filename
-  "Convert a namespace to a path to a clojure source file (.clj)"
-  [a-ns]
-  (-> (str a-ns)
-                 (string/replace "-" "_")
-                 (string/replace "." java.io.File/separator)
-                 (str ".clj")))
+  (let [webxml-filename (webxml-path (:build-dir params))]
+    (mkpath webxml-filename)
+    (spit webxml-filename (webxml-source params))))
 
 (defn write-generated-source
   "Write generated source file into gen-sources directory"
   [class-ns class-body build-dir]
-  (let [src-filename  (str (gen-sources-dir build-dir) (ns-to-filename class-ns))]
-    (.mkdirs (.getParentFile (File. src-filename)))
+  (let [src-filename (str
+                      (gen-sources-dir build-dir)
+                      (core/namespace-to-file class-ns))]
+    (mkpath src-filename)
     (spit src-filename (str class-body))))
 
 (defn write-servlet-source
   "Write servlet source for the webapp according to handler and servlet-class"
   [{:keys [servlet-class handler build-dir]}]
-  (write-generated-source servlet-class (gen-servlet servlet-class handler) build-dir))
-    
+  (write-generated-source
+   servlet-class (servlet-source servlet-class handler) build-dir))
+
 (defn write-listener-source
   "Write listener (init/destroy) source for the webapp"
   [{:keys [listener-class init destroy build-dir]}]
-  (write-generated-source listener-class (generate-listener listener-class init destroy) build-dir))
+  (when-let [source (listener-source listener-class init destroy)]
+    (write-generated-source listener-class source build-dir)))
 
-(defn process-genfiles
+(defn write-files
   "Generate files required for the WAR"
   [params]
   (write-servlet-source params)
@@ -118,41 +140,52 @@
   {Goal "ring-genfiles"
    Phase "generate-sources"}
   [ #=(mojo/parameter
-      ringServletClass "ringServletClass"
-      :typename "java.lang.String"
-      :required true)
+       ringServletClass "ringServletClass"
+       :typename "java.lang.String"
+       :required true)
     #=(mojo/parameter
-      ringServletName "ringServletName"
-      :typename "java.lang.String"
-      :required true)
+       ringServletName "ringServletName"
+       :typename "java.lang.String"
+       :required true)
     #=(mojo/parameter
-      ringListenerClass "ringListenerClass"
-      :typename "java.lang.String"
-      :required true)
+       ringListenerClass "ringListenerClass"
+       :typename "java.lang.String")
     #=(mojo/parameter
-      ringHandler "ringHandler"
-      :typename "java.lang.String"
-      :required true)
+       ringHandler "ringHandler"
+       :typename "java.lang.String"
+       :required true)
     #=(mojo/parameter
-      ringInit "ringInit"
-      :typename "java.lang.String")
+       ringInit "ringInit"
+       :typename "java.lang.String")
     #=(mojo/parameter
-      ringDestroy "ringDestroy"
-      :typename "java.lang.String")
+       ringDestroy "ringDestroy"
+       :typename "java.lang.String")
     #=(mojo/parameter
-      ringUrlPattern "ringUrlPattern"
-      :typename "java.lang.String")
+       ringUrlPattern "ringUrlPattern"
+       :typename "java.lang.String")
     ^{Parameter
-         {:defaultValue "${project.build.directory}" :required true}}
-       ^String
-       buildDirectory]
-  (process-genfiles {
-                    :servlet-class ringServletClass
-                    :servlet-name ringServletName
-                    :listener-class ringListenerClass
-                    :handler ringHandler
-                    :init ringInit
-                    :destroy ringDestroy
-                    :url-pattern ringUrlPattern
-                    :build-dir buildDirectory}))
-                    
+      {:defaultValue "${project.build.directory}" :required true}}
+    ^String
+    buildDirectory
+    ^{Parameter
+      {:expression "${project}"
+       :description "Project"}}
+    project]
+  (write-files {:servlet-class ringServletClass
+                :servlet-name ringServletName
+                :listener-class ringListenerClass
+                :handler ringHandler
+                :init ringInit
+                :destroy ringDestroy
+                :url-pattern ringUrlPattern
+                :build-dir buildDirectory})
+  ;; Ideally, we would like to point the war plugin at the generated web.xml
+  ;; but I'm nt sure how to do that...
+  (.addCompileSourceRoot
+   project
+   (gen-sources-dir buildDirectory))
+  (.addResource
+   project
+   (doto (org.apache.maven.model.Resource.)
+     (.setDirectory (resource-path buildDirectory))
+     (.setTargetPath "WEB-INF"))))
