@@ -1,5 +1,16 @@
 # Release Notes
 
+## 0.4.0
+
+Adds the ring-genfiles goal for lein-ring compatible Servlet,
+ServletContextListener and web.xml generation.
+
+- Fix an issue with keywords used (init and destroy)
+
+- ring-genfiles formatting, add to readme, and add integration test
+
+- Add ring-genfiles goal to allow servlet/listener/web.xml generation
+
 ## 0.3.10
 
 - Fix for non-string used as a test message crashing zi:test

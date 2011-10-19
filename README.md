@@ -22,6 +22,7 @@ This is alpha quality. It requires maven 3.0.3.
  * zi:swank-clojure
  * zi:test
  * zi:marginalia
+ * zi:ring-genfiles
 
 ## Install
 
@@ -86,7 +87,7 @@ you need to make sure that your clj source files end up in your jar file.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.3.10</version>
+          <version>0.4.0</version>
           <executions>
             <execution>
               <id>default-resources</id>
@@ -113,7 +114,7 @@ test-jar file.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.3.10</version>
+          <version>0.4.0</version>
           <executions>
             <execution>
               <id>default-test-resources</id>
@@ -138,7 +139,7 @@ The compile goal AOT compiles clojure source.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.3.10</version>
+          <version>0.4.0</version>
           <executions>
             <execution>
               <id>default-compile</id>
@@ -267,6 +268,54 @@ The marginalia goal creates a marginalia annotated source page.
     <td></td>
     <td>${project.build.directory}</td>
     <td>The directory where marginali should write uberdoc.html</td>
+  </tr>
+</table>
+
+### ring-genfiles
+
+The ring-genfiles goal creates files required for a war packaging.
+See [lein-ring plugin](https://github.com/weavejester/lein-ring/).
+
+<table>
+  <tr>
+    <th>Property</th>
+    <th>Default</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>ringServletClass</td>
+    <td></td>
+    <td>The name of the servlet class</td>
+  </tr>
+  <tr>
+    <td>ringServletName</td>
+    <td></td>
+    <td>The name of the servlet</td>
+  </tr>
+  <tr>
+    <td>ringListenerClass</td>
+    <td></td>
+    <td>The name of the ServletContextListener class</td>
+  </tr>
+  <tr>
+    <td>ringHandler</td>
+    <td></td>
+    <td>The name of the ring handler</td>
+  </tr>
+  <tr>
+    <td>ringInit</td>
+    <td></td>
+    <td>The name of an initialisation hook function</td>
+  </tr>
+  <tr>
+    <td>ringDestroy</td>
+    <td></td>
+    <td>The name of a shutdown hook function</td>
+  </tr>
+  <tr>
+    <td>ringUrlPattern</td>
+    <td></td>
+    <td>The url pattern of the servlet mapping (in web.xml). Defaults to "/*".</td>
   </tr>
 </table>
 

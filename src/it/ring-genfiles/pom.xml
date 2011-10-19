@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.cloudhoist.plugin.test</groupId>
+  <artifactId>zi-ring-genfiles</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+  <name>zi-ring-genfiles</name>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.cloudhoist.plugin</groupId>
+        <artifactId>zi</artifactId>
+        <version>@project.version@</version>
+        <executions>
+          <execution>
+            <id>default-ring-genfiles</id>
+            <goals>
+              <goal>ring-genfiles</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <ringServletClass>zitest.Servlet</ringServletClass>
+              <ringServletName>zi-servlet</ringServletName>
+              <ringListenerClass>zitest.Listener</ringListenerClass>
+              <ringInit>zitest.web/init</ringInit>
+              <ringHandler>zitest.web/handler</ringHandler>
+            </configuration>
+          </execution>
+          <execution>
+            <id>default-compile</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.1.1</version>
+        <configuration>
+          <failOnMissingWebXml>true</failOnMissingWebXml>
+          <webXml>target/zi-ring-genfiles/web.xml</webXml>
+        </configuration>
+      </plugin>
+      <plugin>
+	<!-- disable the java compile -->
+	<artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+	<configuration>
+	  <skip>true</skip>
+	</configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.clojure</groupId>
+      <artifactId>clojure</artifactId>
+      <version>${clojure.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.5</version>
+    </dependency>
+    <dependency>
+      <groupId>ring</groupId>
+      <artifactId>ring-servlet</artifactId>
+      <version>0.3.5</version>
+    </dependency>
+  </dependencies>
+</project>
