@@ -33,15 +33,20 @@
         body (gensym "body")
         test-ns-list (find-tests
                       (core/clojure-source-paths test-source-directory))
-        test-ns-symbols (map #(list `quote (symbol %)) test-ns-list)]
+        test-ns-symbols (map #(list `quote (symbol %)) test-ns-list)
+        init-script (when init-script
+                      (read-string (str "(do " init-script ")")))]
     (when (seq test-ns-symbols)
       (.debug
        log
        (str "Running tests for " (string/join ", " (map name test-ns-list))))
+      (.debug
+       log
+       (str "Init script " init-script))
       (classlojure/eval-in
        cl
        `(do
-          ~(when init-script (read-string init-script))
+          ~init-script
           (require 'clojure.main)
           (clojure.main/with-bindings
             (require '~'clojure.test)
