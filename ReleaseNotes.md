@@ -1,5 +1,10 @@
 # Release Notes
 
+## 0.4.1
+
+- Update initScript handling in test mojo to handle multiple forms
+  Only the first form was being evaluated.
+
 ## 0.4.0
 
 Adds the ring-genfiles goal for lein-ring compatible Servlet,
