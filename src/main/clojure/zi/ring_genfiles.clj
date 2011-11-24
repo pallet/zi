@@ -73,10 +73,10 @@ The code is based on the
      [:web-app
       (when (or init destroy)
         [:listener
-         [:listener-class listener-class]])
+         [:listener-class (string/replace listener-class "-" "_")]])
       [:servlet
        [:servlet-name  handler]
-       [:servlet-class servlet-class]]
+       [:servlet-class (string/replace servlet-class "-" "_")]]
       [:servlet-mapping
        [:servlet-name handler ]
        [:url-pattern (or url-pattern "/*")]]])))
