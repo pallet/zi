@@ -1,5 +1,14 @@
 # Release Notes
 
+## 0.4.2
+
+- ring gen files : listener-class and servlet-class in web.xml should point
+  to the class file (no '-', use '_' instead)
+
+- Update to ritz 0.2.0
+
+- Enforce maven 3.0.3 requirement
+
 ## 0.4.1
 
 - Update initScript handling in test mojo to handle multiple forms
