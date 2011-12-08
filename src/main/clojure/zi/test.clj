@@ -60,8 +60,7 @@
              `(fn [out# err#]
                 (clojure.main/with-bindings
                   (binding [*out* out# *err* err#]
-                    (binding [clojure.test/*test-out* *out*]
-                      (require ~@test-ns-symbols))
+                      
                     (let [results# (atom [])
                           original-report# clojure.test/report
                           report# (fn [m#]
@@ -75,6 +74,7 @@
                                           [:ns] #(when %
                                                    (list
                                                     `quote (ns-name %)))))))]
+                      (require ~@test-ns-symbols)
                       (~'portable-redef
                        [clojure.test/report report#]
                        (binding [clojure.test/*test-out* *out*]
