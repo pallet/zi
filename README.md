@@ -208,6 +208,10 @@ The ritz and swank-clojure goals both recognise sub-projects linked in a
 checkouts directory, and adds their sources and resources to the the
 classpath.
 
+The ritz plugin also adds source jars to the classpath if they are available in
+the local repository.  You can resolve the source jars using
+`mvn dependency:sources`.
+
 ### swank-clojure
 
 The swank-clojure goal starts a swank-clojure server.
