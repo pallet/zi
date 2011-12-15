@@ -1,5 +1,13 @@
 # Release Notes
 
+## 0.4.3
+- Allow tests to override core.test/report before redef'ing.
+  Some test frameworks, such as midje register additional defmethods for
+  core.test/report. By requiring the test namespaces before the report var
+  is redef'ed to a function, these test frameworks become supported.
+
+- Add note about source jars to readme
+
 ## 0.4.2
 
 - ring gen files : listener-class and servlet-class in web.xml should point
