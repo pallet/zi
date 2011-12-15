@@ -60,6 +60,7 @@
              `(fn [out# err#]
                 (clojure.main/with-bindings
                   (binding [*out* out# *err* err#]
+                      
                     (let [results# (atom [])
                           original-report# clojure.test/report
                           report# (fn [m#]
