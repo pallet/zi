@@ -87,7 +87,7 @@ you need to make sure that your clj source files end up in your jar file.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.4.2</version>
+          <version>0.4.3</version>
           <executions>
             <execution>
               <id>default-resources</id>
@@ -114,7 +114,7 @@ test-jar file.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.4.2</version>
+          <version>0.4.3</version>
           <executions>
             <execution>
               <id>default-test-resources</id>
@@ -139,7 +139,7 @@ The compile goal AOT compiles clojure source.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.4.2</version>
+          <version>0.4.3</version>
           <executions>
             <execution>
               <id>default-compile</id>
@@ -207,6 +207,10 @@ The ritz goal starts a ritz server.
 The ritz and swank-clojure goals both recognise sub-projects linked in a
 checkouts directory, and adds their sources and resources to the the
 classpath.
+
+The ritz plugin also adds source jars to the classpath if they are available in
+the local repository.  You can resolve the source jars using
+`mvn dependency:sources`.
 
 ### swank-clojure
 

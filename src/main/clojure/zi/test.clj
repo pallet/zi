@@ -73,10 +73,10 @@
                                           [:ns] #(when %
                                                    (list
                                                     `quote (ns-name %)))))))]
+                      (require ~@test-ns-symbols)
                       (~'portable-redef
                        [clojure.test/report report#]
                        (binding [clojure.test/*test-out* *out*]
-                         (require ~@test-ns-symbols)
                          (clojure.test/run-tests ~@test-ns-symbols)))
                       (map #(update-in % [:message] str) @results#)))))
              *out* *err*)
