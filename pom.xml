@@ -160,6 +160,18 @@
       <groupId>marginalia</groupId>
       <artifactId>marginalia</artifactId>
       <version>0.6.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>hiccup</groupId>
+          <artifactId>hiccup</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>codox</groupId>
+      <artifactId>codox</artifactId>
+      <version>0.3.3</version>
     </dependency>
 
     <dependency>

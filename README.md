@@ -21,6 +21,7 @@ This is alpha quality. It requires maven 3.0.3.
  * zi:ritz
  * zi:swank-clojure
  * zi:test
+ * zi:codox
  * zi:marginalia
  * zi:ring-genfiles
 
@@ -256,9 +257,14 @@ The test goal runs clojure.test tests.
   </tr>
 </table>
 
+### codox
+
+The codox goal creates codox generated API documentation in the `doc` directory.
+
 ### marginalia
 
-The marginalia goal creates a marginalia annotated source page.
+The marginalia goal creates a marginalia annotated source page. Note that this fails with
+clojure 1.3 projects, until a 1.3 compatable release of marginalia is forthcoming.
 
 <table>
   <tr>

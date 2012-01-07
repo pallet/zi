@@ -1,0 +1,6 @@
+import java.io.*;
+
+File file = new File( basedir, "doc/codox.test.html" );
+if ( !file.exists() ) {
+    throw new FileNotFoundException( "Could not find codox output: " + file );
+}
