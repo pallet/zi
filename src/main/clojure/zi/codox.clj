@@ -24,7 +24,7 @@
   #"hiccup/hiccup/[0-9.]+(?:-SNAPSHOT)?/hiccup")
 
 (defn run-codox
-  [project source-paths classpath-elements]
+  [project source-paths classpath-elements target-path]
   (let [artifacts
         (mapcat
          #(core/overridable-artifact-path % classpath-elements)
@@ -39,16 +39,24 @@
          {:name ~(.getName project)
           :version ~(.getVersion project)
           :description ~(.getDescription project)
-          :sources ~source-paths})))))
+          :sources ~source-paths
+          :output-dir ~target-path})))))
 
 (mojo/defmojo Codox
   {Goal "codox"
    RequiresDependencyResolution "test"}
   [^{Parameter
+     {:defaultValue "${project.build.directory}/doc"
+      :alias "codoxTargetDirectory"
+      :description "Where to write codox output"}}
+   ^String codox-target-directory
+
+   ^{Parameter
      {:expression "${project}"
       :description "Project"}}
    project]
   (run-codox
    project
    (core/clojure-source-paths source-directory)
-   test-classpath-elements))
+   test-classpath-elements
+   codox-target-directory))
