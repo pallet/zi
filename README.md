@@ -88,7 +88,7 @@ you need to make sure that your clj source files end up in your jar file.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.4.3</version>
+          <version>0.4.4</version>
           <executions>
             <execution>
               <id>default-resources</id>
@@ -115,7 +115,7 @@ test-jar file.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.4.3</version>
+          <version>0.4.4</version>
           <executions>
             <execution>
               <id>default-test-resources</id>
@@ -140,7 +140,7 @@ The compile goal AOT compiles clojure source.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.4.3</version>
+          <version>0.4.4</version>
           <executions>
             <execution>
               <id>default-compile</id>
@@ -261,6 +261,21 @@ The test goal runs clojure.test tests.
 
 The codox goal creates codox generated API documentation in the `doc` directory.
 
+<table>
+  <tr>
+    <th>Property</th>
+    <th>Variable</th>
+    <th>Default</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>codoxTargetDirectory</td>
+    <td></td>
+    <td>${project.build.directory}/doc</td>
+    <td>The directory where codox should write its output</td>
+  </tr>
+</table>
+
 ### marginalia
 
 The marginalia goal creates a marginalia annotated source page. Note that this fails with
@@ -277,7 +292,7 @@ clojure 1.3 projects, until a 1.3 compatable release of marginalia is forthcomin
     <td>marginaliaTargetDirectory</td>
     <td></td>
     <td>${project.build.directory}</td>
-    <td>The directory where marginali should write uberdoc.html</td>
+    <td>The directory where marginalia should write uberdoc.html</td>
   </tr>
 </table>
 
