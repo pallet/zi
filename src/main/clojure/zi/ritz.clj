@@ -65,9 +65,13 @@
                                repoSystem repoSystemSession projectBuilder)))
           classpath-elements (->
                               (vec test-classpath-elements)
-                              (into ritz-artifact))]
+                              (into ritz-artifact))
+          log-level (if-let [p (System/getProperty "ritz.loglevel")]
+                      (read-string p)
+                      :warn)]
       (.debug log (format "source paths: %s" (vec source-paths)))
       (.debug log (format "classpath elements: %s" (vec classpath-elements)))
+      (.debug log (format "log-level %s" (pr-str log-level)))
       (core/eval-clojure
        source-paths
        (core/classpath-with-source-jars classpath-elements)
@@ -78,4 +82,5 @@
             :host ~network
             :port ~(Integer/parseInt port)
             :encoding ~encoding
-            :dont-close true}))))))
+            :dont-close true
+            :log-level ~log-level}))))))

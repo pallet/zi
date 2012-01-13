@@ -9,7 +9,7 @@
 
   <groupId>org.cloudhoist.plugin</groupId>
   <artifactId>zi</artifactId>
-  <version>0.4.4-SNAPSHOT</version>
+  <version>0.4.5-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>zi</name>
@@ -160,6 +160,18 @@
       <groupId>marginalia</groupId>
       <artifactId>marginalia</artifactId>
       <version>0.6.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>hiccup</groupId>
+          <artifactId>hiccup</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>codox</groupId>
+      <artifactId>codox</artifactId>
+      <version>${codox.version}</version>
     </dependency>
 
     <dependency>
@@ -308,5 +320,6 @@
     <aether.version>1.11</aether.version>
     <clojureMaven.version>0.3.1</clojureMaven.version>
     <clojure.version>1.2.1</clojure.version>
+    <codox.version>0.3.4</codox.version>
   </properties>
 </project>
