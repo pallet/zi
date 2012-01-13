@@ -1,5 +1,15 @@
 # Release Notes
 
+# 0.4.4
+- Add support for codoxTargetDirectory
+
+- Add a codox goal
+  The codox goal can be used to generate api documentation based on the
+  codox project
+
+- Allow setting of ritz loglevel via a system property
+  Setting ritz.logglevel=:trace will enable ritz logging
+
 ## 0.4.3
 - Allow tests to override core.test/report before redef'ing.
   Some test frameworks, such as midje register additional defmethods for
