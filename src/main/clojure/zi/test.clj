@@ -22,11 +22,13 @@
   [result]
   (case (:type result)
     :fail (log/error
-            "FAIL %s expected: %s  actual: %s"
-            (:message result "") (:expected result) (:actual result))
+            (format
+              "FAIL %s expected: %s  actual: %s"
+              (:message result "") (:expected result) (:actual result)))
     :error (log/error
-             "%s expected: %s  actual: %s"
-             (:message result "") (:expected result) (:actual result))))
+             (format
+               "%s expected: %s  actual: %s"
+               (:message result "") (:expected result) (:actual result)))))
 
 (defn run-tests
   [classpath-elements test-source-directory init-script]
