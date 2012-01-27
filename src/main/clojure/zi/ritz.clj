@@ -3,6 +3,7 @@
   (:require
    [zi.core :as core]
    [zi.mojo :as mojo]
+   [zi.log :as log]
    [zi.checkouts :as checkouts])
   (:import
    java.io.File
@@ -49,7 +50,7 @@
    packaging]
 
   (if (= packaging "pom")
-    (.info log "Ritz can not be run on a project with pom packaging")
+    (log/info "Ritz can not be run on a project with pom packaging")
     (let [tmpfile (try
                     (File/createTempFile "swank" ".port")
                     (catch java.io.IOException e
@@ -69,9 +70,9 @@
           log-level (if-let [p (System/getProperty "ritz.loglevel")]
                       (read-string p)
                       :warn)]
-      (.debug log (format "source paths: %s" (vec source-paths)))
-      (.debug log (format "classpath elements: %s" (vec classpath-elements)))
-      (.debug log (format "log-level %s" (pr-str log-level)))
+      (log/debugf "source paths: %s" (vec source-paths))
+      (log/debugf "classpath elements: %s" (vec classpath-elements))
+      (log/debugf "log-level %s" (pr-str log-level))
       (core/eval-clojure
        source-paths
        (core/classpath-with-source-jars classpath-elements)
