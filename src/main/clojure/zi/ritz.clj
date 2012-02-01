@@ -70,9 +70,9 @@
           log-level (if-let [p (System/getProperty "ritz.loglevel")]
                       (read-string p)
                       :warn)]
-      (log/debug (format "source paths: %s" (vec source-paths)))
-      (log/debug (format "classpath elements: %s" (vec classpath-elements)))
-      (log/debug (format "log-level %s" (pr-str log-level)))
+      (log/debugf "source paths: %s" (vec source-paths))
+      (log/debugf "classpath elements: %s" (vec classpath-elements))
+      (log/debugf "log-level %s" (pr-str log-level))
       (core/eval-clojure
        source-paths
        (core/classpath-with-source-jars classpath-elements)

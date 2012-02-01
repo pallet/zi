@@ -21,14 +21,12 @@
 (defn report-test
   [result]
   (case (:type result)
-    :fail (log/error
-            (format
-              "FAIL %s expected: %s  actual: %s"
-              (:message result "") (:expected result) (:actual result)))
-    :error (log/error
-             (format
-               "%s expected: %s  actual: %s"
-               (:message result "") (:expected result) (:actual result)))))
+    :fail (log/errorf
+            "FAIL %s expected: %s  actual: %s"
+            (:message result "") (:expected result) (:actual result))
+    :error (log/errorf
+             "%s expected: %s  actual: %s"
+             (:message result "") (:expected result) (:actual result))))
 
 (defn run-tests
   [classpath-elements test-source-directory init-script]
@@ -85,10 +83,9 @@
             passes (dec (count (map :pass results)))
             summary (last results)]
         (log/debug (pr-str results))
-        (log/info
-         (format
+        (log/infof
           "Tests run: %d, passed: %d, failed: %d, errors: %d"
-          (:test summary) (:pass summary) (:fail summary) (:error summary)))
+          (:test summary) (:pass summary) (:fail summary) (:error summary))
         (when (or (pos? (:fail summary)) (pos? (:error summary)))
           (throw
            (org.apache.maven.plugin.MojoFailureException. "Tests failed")))))))

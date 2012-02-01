@@ -1,58 +1,66 @@
 (ns zi.log
   "Logging utilities for plugin development."
-  (:import
-    org.codehaus.plexus.logging.Logger))
+  (:require
+    [clojure.string :as string]))
 
-; "A non-functional logger that acts as a stand-in until the var *plexus-log*
-; is rebound."
-(deftype MockLogger []
-  Logger
-  (debug [this _])
-  (debug [this _ _])
-  (isDebugEnabled [this] false)
-  (info [this _])
-  (info [this _ _])
-  (isInfoEnabled [this] false)
-  (warn [this _])
-  (warn [this _ _])
-  (isWarnEnabled [this] false)
-  (error [this _])
-  (error [this _ _])
-  (isErrorEnabled [this] false)
-  (fatalError [this _])
-  (fatalError [this _ _])
-  (isFatalErrorEnabled [this] false)
-  (getThreshold [this] Logger/LEVEL_DISABLED)
-  (setThreshold [this _])
-  (getChildLogger [this _] (MockLogger.))
-  (getName [this] ""))
+(def *plexus-log* nil)
 
-(def *plexus-log* (MockLogger.))
+(defmacro log-level? [level]
+  (let [log-level-fn (str "is" (string/capitalize (name level)) "Enabled")]
+    `(and
+       (not (nil? *plexus-log*))
+       (. *plexus-log* ~(symbol log-level-fn)))))
 
-(defn debug? [] (.isDebugEnabled *plexus-log*))
-(defn debug
-  ([mesg] (if (debug?) (.debug *plexus-log* mesg)))
-  ([mesg e] (if (debug?) (.debug *plexus-log* mesg e))))
+(defmacro log
+  ([mesg level]
+   `(when (log-level? ~level) (. *plexus-log* ~(symbol (name level)) ~mesg)))
+  ([e mesg level]
+   `(when (log-level? ~level) (. *plexus-log* ~(symbol (name level)) ~mesg ~e))))
 
-(defn info? [] (.isInfoEnabled *plexus-log*))
-(defn info
-  ([mesg] (if (info?) (.info *plexus-log* mesg)))
-  ([mesg e] (if (info?) (.info *plexus-log* mesg e))))
+(defn debug? [] (log-level? :debug))
 
-(defn warn? [] (.isWarnEnabled *plexus-log*))
-(defn warn
-  ([mesg] (if (warn?) (.warn *plexus-log* mesg)))
-  ([mesg e] (if (warn?) (.warn *plexus-log* mesg e))))
+(defmacro debug
+  ([mesg] `(log ~mesg :debug))
+  ([e mesg] `(log ~e ~mesg :debug)))
 
-(defn error? [] (.isErrorEnabled *plexus-log*))
-(defn error
-  ([mesg] (if (error?) (.error *plexus-log* mesg)))
-  ([mesg e] (if (error?) (.error *plexus-log* mesg e))))
+(defmacro debugf [mesg & args]
+  `(debug (format ~mesg ~@args)))
 
-(defn fatal-error? [] (.isFatalErrorEnabled *plexus-log*))
-(defn fatal-error
-  ([mesg] (if (fatal-error?) (.fatal-error *plexus-log* mesg)))
-  ([mesg e] (if (fatal-error?) (.fatal-error *plexus-log* mesg e))))
+(defn info? [] (log-level? :info))
+
+(defmacro info
+  ([mesg] `(log ~mesg :info))
+  ([e mesg] `(log ~e ~mesg :info)))
+
+(defmacro infof [mesg & args]
+  `(info (format ~mesg ~@args)))
+
+(defn warn? [] (log-level? :warn))
+
+(defmacro warn
+  ([mesg] `(log ~mesg :warn))
+  ([e mesg] `(log ~e ~mesg :warn)))
+
+(defmacro warnf [mesg & args]
+  `(warn (format ~mesg ~@args)))
+
+(defn error? [] (log-level? :error))
+
+(defmacro error
+  ([mesg] `(log ~mesg :error))
+  ([e mesg] `(log ~e ~mesg :error)))
+
+(defmacro errorf [mesg & args]
+  `(error (format ~mesg ~@args)))
+
+(defn fatal-error? [] (log-level? :fatal-error))
+
+(defmacro fatal-error
+  ([mesg] `(log ~mesg :fatal-error))
+  ([e mesg] `(log ~e ~mesg :fatal-error)))
+
+(defmacro fatal-errorf [mesg & args]
+  `(fatal-error (format ~mesg ~@args)))
 
 (defmacro with-log [log & body]
   `(binding [*plexus-log* ~log]
