@@ -83,6 +83,11 @@
   [regex classpath-elements]
   (some #(re-find regex %) classpath-elements))
 
+(defn zi-classpath-elements
+  "Return the classpath elements in the plugins classpath"
+  []
+  (map #(.getPath %) (.getURLs (.getClassLoader clojure.lang.RT))))
+
 (defn overridable-artifact-path
   "Get the artifact path, either from the current project, or if not specified
    there, from zi. n.b. This does not deal with the artifact's dependencies."
@@ -90,7 +95,7 @@
   (when-not (path-on-classpath? regex project-classpath-elements)
     (filter
      #(re-find regex %)
-     (map #(.getPath %) (.getURLs (.getClassLoader clojure.lang.RT))))))
+     (zi-classpath-elements))))
 
 (defn source-jar
   "Return the path to the source jar if it exists."
