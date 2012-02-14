@@ -24,23 +24,19 @@
   #"hiccup/hiccup/[0-9.]+(?:-SNAPSHOT)?/hiccup")
 
 (defn run-codox
-  [project source-paths classpath-elements target-path version]
-  (let [artifacts
-        (mapcat
-         #(core/overridable-artifact-path % classpath-elements)
-         [codox-path-regex tools-namespace-path-regex java-classpath-path-regex
-          hiccup-path-regex])]
-    (core/eval-clojure
-     source-paths
-     (vec (concat classpath-elements artifacts))
-     `(do
-        (require 'codox.main)
-        (codox.main/generate-docs
-         {:name ~(.getName project)
-          :version ~version
-          :description ~(.getDescription project)
-          :sources ~source-paths
-          :output-dir ~target-path})))))
+  [project source-paths classpath-elements target-path version writer]
+  (core/eval-clojure
+   source-paths
+   (vec (concat classpath-elements (core/zi-classpath-elements)))
+   `(do
+      (require 'codox.main)
+      (codox.main/generate-docs
+       {:name ~(.getName project)
+        :version ~version
+        :description ~(.getDescription project)
+        :sources ~source-paths
+        :output-dir ~target-path
+        :writer '~writer}))))
 
 (mojo/defmojo Codox
   {Goal "codox"
@@ -58,12 +54,20 @@
    ^String codox-api-version
 
    ^{Parameter
+     {:alias "codoxWriter"
+      :description "Symbol of var used to write codox output"}}
+   ^String codox-writer
+
+   ^{Parameter
      {:expression "${project}"
       :description "Project"}}
    project]
-  (run-codox
-   project
-   (core/clojure-source-paths source-directory)
-   test-classpath-elements
-   codox-target-directory
-   codox-api-version))
+  (let [writer (symbol (or codox-writer "codox.writer.html/write-docs"))]
+    (.debug log (str "Writer is " writer))
+    (run-codox
+     project
+     (core/clojure-source-paths source-directory)
+     test-classpath-elements
+     codox-target-directory
+     codox-api-version
+     writer)))
