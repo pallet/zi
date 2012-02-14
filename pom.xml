@@ -9,7 +9,7 @@
 
   <groupId>org.cloudhoist.plugin</groupId>
   <artifactId>zi</artifactId>
-  <version>0.4.5-SNAPSHOT</version>
+  <version>0.4.6-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>zi</name>
@@ -63,7 +63,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-release-plugin</artifactId>
-        <version>2.2.1</version>
+        <version>2.2.2</version>
         <configuration>
           <autoVersionSubmodules>true</autoVersionSubmodules>
           <localCheckout>true</localCheckout>
@@ -141,13 +141,13 @@
     <dependency>
       <groupId>classlojure</groupId>
       <artifactId>classlojure</artifactId>
-      <version>0.6.1</version>
+      <version>0.6.5</version>
     </dependency>
 
     <dependency>
       <groupId>ritz</groupId>
       <artifactId>ritz</artifactId>
-      <version>0.2.0</version>
+      <version>${ritz.version}</version>
     </dependency>
 
     <dependency>
@@ -159,7 +159,7 @@
     <dependency>
       <groupId>marginalia</groupId>
       <artifactId>marginalia</artifactId>
-      <version>0.6.0</version>
+      <version>${marginalia.version}</version>
       <exclusions>
         <exclusion>
           <groupId>hiccup</groupId>
@@ -172,6 +172,12 @@
       <groupId>codox</groupId>
       <artifactId>codox</artifactId>
       <version>${codox.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>codox-md</groupId>
+      <artifactId>codox-md</artifactId>
+      <version>${codox-md.version}</version>
     </dependency>
 
     <dependency>
@@ -320,6 +326,9 @@
     <aether.version>1.11</aether.version>
     <clojureMaven.version>0.3.1</clojureMaven.version>
     <clojure.version>1.2.1</clojure.version>
-    <codox.version>0.3.4</codox.version>
+    <marginalia.version>0.6.0</marginalia.version>
+    <codox.version>0.4.0</codox.version>
+    <codox-md.version>0.1.0</codox-md.version>
+    <ritz.version>0.2.1</ritz.version>
   </properties>
 </project>
