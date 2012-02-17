@@ -3,7 +3,7 @@
   (:require
     [clojure.string :as string]))
 
-(def *plexus-log* nil)
+(def ^{:dynamic true} *plexus-log* nil)
 
 (defmacro log-level? [level]
   (let [log-level-fn (str "is" (string/capitalize (name level)) "Enabled")]
@@ -65,4 +65,3 @@
 (defmacro with-log [log & body]
   `(binding [*plexus-log* ~log]
     ~@body))
-
