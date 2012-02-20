@@ -33,7 +33,7 @@
      (map #(.getPath %) (mapcat core/clj-files source-paths))
      {:name (.getName project)
       :version (.getVersion project)
-      :description (.getDescription project)
+      :description (core/unindent-description (.getDescription project))
       :dependencies (formatDependencies
                      (filter
                       #(= Artifact/SCOPE_COMPILE (.getScope %))

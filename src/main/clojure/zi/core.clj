@@ -114,3 +114,39 @@
     classpath-elements
     (map source-jar)
     (filter identity))))
+
+(defn smallest-indent
+  "Given a multi-line string `s`, find the smallest indent."
+  ([s drop-lines]
+     (->>
+      s
+      string/split-lines
+      (drop drop-lines)
+      (remove string/blank?)
+      (map (partial re-find #"^\s+"))
+      (map count)
+      (#(if (seq %) (apply min %) 0))))
+  ([s]
+     (smallest-indent s 0)))
+
+(defn unindent
+  "Un-indent a multi-line string, `s`. The `unindent-count` defaults to the
+   smallest indentation present in the string."
+  ([s unindent-count]
+     (when s
+       (let [re (re-pattern (str "^\\s{0," unindent-count "}"))]
+         (->>
+          s
+          string/split-lines
+          (map #(string/replace % re ""))
+          (string/join \newline)))))
+  ([s]
+     (when s
+       (unindent s (smallest-indent s)))))
+
+(defn unindent-description
+  "Unindent a maven project description. The leading whitespace on the first
+   line is weird."
+  [s]
+  (when s
+    (unindent s (smallest-indent s 1))))

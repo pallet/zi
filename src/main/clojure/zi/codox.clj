@@ -33,7 +33,7 @@
       (codox.main/generate-docs
        {:name ~(.getName project)
         :version ~version
-        :description ~(.getDescription project)
+        :description ~(core/unindent-description (.getDescription project))
         :sources ~source-paths
         :output-dir ~target-path
         :writer '~writer}))))
