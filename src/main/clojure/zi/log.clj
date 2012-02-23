@@ -1,12 +1,12 @@
 (ns zi.log
   "Logging utilities for plugin development."
-  (:require
-    [clojure.string :as string]))
+  (:use
+    [clojure.string :only (capitalize)]))
 
 (def ^{:dynamic true} *plexus-log* nil)
 
 (defmacro log-level? [level]
-  (let [log-level-fn (str "is" (string/capitalize (name level)) "Enabled")]
+  (let [log-level-fn (str "is" (capitalize (name level)) "Enabled")]
     `(and
        (not (nil? *plexus-log*))
        (. *plexus-log* ~(symbol log-level-fn)))))
@@ -17,51 +17,41 @@
   ([e mesg level]
    `(when (log-level? ~level) (. *plexus-log* ~(symbol (name level)) ~mesg ~e))))
 
-(defn debug? [] (log-level? :debug))
+(defmacro deflog [level]
+  "Given a keyword defines a set of functions for that log level.  The
+  functions are as follows, where <level> is the name string of the keyword:
 
-(defmacro debug
-  ([mesg] `(log ~mesg :debug))
-  ([e mesg] `(log ~e ~mesg :debug)))
+  <level>? []
+  Returns true/false as to whether that log level is enabled.
 
-(defmacro debugf [mesg & args]
-  `(debug (format ~mesg ~@args)))
+  <level>  [mesg] [e mesg]
+  Logs a string message along with an optional exception.
 
-(defn info? [] (log-level? :info))
+  <level>f [mesg & args]
+  Logs a format string along with a sequence of arguments."
+  (let [log-fn (name level)
+        query-fn (str log-fn "?")
+        format-fn (str log-fn "f")]
+    `(do
+       (defn ~(symbol query-fn) [] (log-level? ~level))
 
-(defmacro info
-  ([mesg] `(log ~mesg :info))
-  ([e mesg] `(log ~e ~mesg :info)))
+       (defmacro ~(symbol log-fn)
+         ([~'mesg] `(log ~~'mesg ~~level))
+         ([~'e ~'mesg] `(log ~~'e ~~'mesg ~~level)))
 
-(defmacro infof [mesg & args]
-  `(info (format ~mesg ~@args)))
+       (defmacro ~(symbol format-fn) [~'fmesg & ~'args]
+         `(log (format ~~'fmesg ~@~'args) ~~level)))))
 
-(defn warn? [] (log-level? :warn))
+(deflog :debug)
 
-(defmacro warn
-  ([mesg] `(log ~mesg :warn))
-  ([e mesg] `(log ~e ~mesg :warn)))
+(deflog :info)
 
-(defmacro warnf [mesg & args]
-  `(warn (format ~mesg ~@args)))
+(deflog :warn)
 
-(defn error? [] (log-level? :error))
+(deflog :error)
 
-(defmacro error
-  ([mesg] `(log ~mesg :error))
-  ([e mesg] `(log ~e ~mesg :error)))
-
-(defmacro errorf [mesg & args]
-  `(error (format ~mesg ~@args)))
-
-(defn fatal-error? [] (log-level? :fatal-error))
-
-(defmacro fatal-error
-  ([mesg] `(log ~mesg :fatal-error))
-  ([e mesg] `(log ~e ~mesg :fatal-error)))
-
-(defmacro fatal-errorf [mesg & args]
-  `(fatal-error (format ~mesg ~@args)))
+(deflog :fatal-error)
 
 (defmacro with-log [log & body]
   `(binding [*plexus-log* ~log]
-    ~@body))
+     ~@body))
