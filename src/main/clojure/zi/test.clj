@@ -15,8 +15,11 @@
 (defn find-tests
   "Find all clj files under the test source path, and return the
    namespaces."
-  [source-paths]
-  (mapcat core/find-namespaces source-paths))
+  [source-paths exclude-ns-regex]
+  (let [nss (mapcat core/find-namespaces source-paths)]
+    (if-not (string/blank? exclude-ns-regex)
+      (remove #(re-matches (re-pattern exclude-ns-regex) %) nss)
+      nss)))
 
 (defn report-test
   [result]
@@ -29,12 +32,13 @@
              (:message result "") (:expected result) (:actual result))))
 
 (defn run-tests
-  [classpath-elements test-source-directory init-script]
+  [classpath-elements test-source-directory init-script exclude-ns-regex]
   (let [cl (core/classloader-for classpath-elements)
         bindings (gensym "bindings")
         body (gensym "body")
         test-ns-list (find-tests
-                      (core/clojure-source-paths test-source-directory))
+                      (core/clojure-source-paths test-source-directory)
+                      exclude-ns-regex)
         test-ns-symbols (map #(list `quote (symbol %)) test-ns-list)
         init-script (when init-script
                       (read-string (str "(do " init-script ")")))]
@@ -51,7 +55,7 @@
           (clojure.main/with-bindings
             (require '~'clojure.test)
             (defmacro ~'portable-redef [ [& ~bindings] & ~body ]
-              (if (find-var 'clojure.core/with-redefs)
+              (if (ns-resolve 'clojure.core 'with-redefs)
                 `(clojure.core/with-redefs [~@~bindings] ~@~body)
                 `(binding [~@~bindings] ~@~body))))))
       (let [results
@@ -66,13 +70,19 @@
                                     (original-report# m#)
                                     (swap!
                                      results# conj
-                                     (-> m#
-                                         (update-in
-                                          [:actual] #(when % (pr-str %)))
-                                         (update-in
-                                          [:ns] #(when %
-                                                   (list
-                                                    `quote (ns-name %)))))))]
+                                     (->
+                                      m#
+                                      (update-in
+                                       [:actual]
+                                       #(when %
+                                          (try
+                                            (pr-str %)
+                                            (catch Exception _#
+                                              "Unable to show actual value"))))
+                                      (update-in
+                                       [:ns] #(when %
+                                                (list
+                                                 `quote (ns-name %)))))))]
                       (require ~@test-ns-symbols)
                       (~'portable-redef
                        [clojure.test/report report#]
@@ -82,22 +92,37 @@
              *out* *err*)
             passes (dec (count (map :pass results)))
             summary (last results)]
-        (log/debug (pr-str results))
+        (log/debug
+         (let [res (pr-str results)
+               l (count res)]
+           (str
+            "RESULTS: "
+            (subs res 0 (min 1024 l))
+            (if (> l 1024) "..." ""))))
         (log/infof
-          "Tests run: %d, passed: %d, failed: %d, errors: %d"
-          (:test summary) (:pass summary) (:fail summary) (:error summary))
+         "Tests run: %d, passed: %d, failed: %d, errors: %d"
+         (:test summary) (:pass summary) (:fail summary) (:error summary))
         (when (or (pos? (:fail summary)) (pos? (:error summary)))
           (throw
            (org.apache.maven.plugin.MojoFailureException. "Tests failed")))))))
 
 (mojo/defmojo ClojureTest
   {Goal "test"
+   Phase "test"
    RequiresDependencyResolution "test"}
-  [^{Parameter
+  [;; list parameters not yet functional in zi
+   ^{Parameter
      {:expression "${clojure.test-ns}" :defaultValue ""
       :description "List of namespaces to run tests for"}}
    ^String
    namespaces
+   ^{Parameter
+     {:expression "${clojure.test.exclude-ns}"
+      :description "Regular expression for excluding namespaces from testing"
+      :alias "excludeTestNamespacesMatching"
+      :typename "java.lang.String"}}
+   ^String
+   exclude-test-ns-regex
 
    ^{Parameter
      {:expression "${skipTests}"
@@ -114,4 +139,5 @@
       (core/clojure-source-paths source-directory)
       test-classpath-elements)
      test-source-directory
-     init-script)))
+     init-script
+     exclude-test-ns-regex)))

@@ -1,5 +1,14 @@
 # Release Notes
 
+# 0.4.5
+
+- Allow exclusion of tests based on a regex
+  Provides a mechanism for disabling clojure.test test namespaces
+
+- Allow specification of codox output writer
+
+- Allow explicit specification of codox api version
+
 # 0.4.4
 - Add support for codoxTargetDirectory
 
