@@ -36,11 +36,11 @@
        (defn ~(symbol query-fn) [] (log-level? ~level))
 
        (defmacro ~(symbol log-fn)
-         ([mesg#] `(log ~mesg# ~~level))
-         ([e# mesg#] `(log ~e# ~mesg# ~~level)))
+         ([~'mesg] `(log ~~'mesg ~~level))
+         ([~'e ~'mesg] `(log ~~'e ~~'mesg ~~level)))
 
-       (defmacro ~(symbol format-fn) [fmesg# & args#]
-         `(log (format ~fmesg# ~@args#) ~~level)))))
+       (defmacro ~(symbol format-fn) [~'fmesg & ~'args]
+         `(log (format ~~'fmesg ~@~'args) ~~level)))))
 
 (deflog :debug)
 
