@@ -1,14 +1,12 @@
 (ns zi.log
   "Logging utilities for plugin development."
-  (:require
-    [clojure.string :as string]))
+  (:use
+    [clojure.string :only (capitalize)]))
 
-;; TODO: Change this to standard ^:dynamic declaration when project is migrated
-;; to Clojure 1.3.
 (def ^{:dynamic true} *plexus-log* nil)
 
 (defmacro log-level? [level]
-  (let [log-level-fn (str "is" (string/capitalize (name level)) "Enabled")]
+  (let [log-level-fn (str "is" (capitalize (name level)) "Enabled")]
     `(and
        (not (nil? *plexus-log*))
        (. *plexus-log* ~(symbol log-level-fn)))))
@@ -30,7 +28,7 @@
   Logs a string message along with an optional exception.
 
   <level>f [mesg & args]
-  Logs a format string along with arguments." 
+  Logs a format string along with a sequence of arguments." 
   (let [log-fn (name level)
         query-fn (str log-fn "?")
         format-fn (str log-fn "f")]
