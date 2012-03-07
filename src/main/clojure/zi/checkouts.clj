@@ -24,6 +24,6 @@
                   repo-system repo-system-session project-builder pom))))
      (mapcat identity
              (for [checkout checkouts
-                   :let [project (io/file checkout "project.clj")]
+                   :let [project (.getPath (io/file checkout "project.clj"))]
                    :when (.exists project)]
                (lein/paths-for-checkout project))))))
