@@ -145,6 +145,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.clojure</groupId>
+      <artifactId>data.xml</artifactId>
+      <version>0.0.3</version>
+    </dependency>
+
+    <dependency>
       <groupId>ritz</groupId>
       <artifactId>ritz</artifactId>
       <version>${ritz.version}</version>
@@ -324,11 +330,13 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.version>3.0.4</maven.version>
     <aether.version>1.13</aether.version>
-    <clojureMaven.version>0.3.1</clojureMaven.version>
+    <clojureMaven.version>0.3.2-SNAPSHOT</clojureMaven.version>
+    <clojure.groupId>org.clojure</clojure.groupId>
     <clojure.version>1.2.1</clojure.version>
     <marginalia.version>0.6.0</marginalia.version>
     <codox.version>0.4.0</codox.version>
     <codox-md.version>0.1.0</codox-md.version>
     <ritz.version>0.2.1</ritz.version>
+    <data.xml.version>0.0.1</data.xml.version>
   </properties>
 </project>

@@ -7,13 +7,14 @@ The properties of lein-ring plugin maybe generated with `lein pom`, using the
 companion lein plugin for this task.
 
 The code is based on the
-[lein-ring plugin](https://github.com/weavejester/lein-ring/)."
+ [lein-ring plugin](https://github.com/weavejester/lein-ring/)."
   (:require
    [zi.mojo :as mojo]
    [zi.core :as core]
    [clojure.java.io :as io]
-   [clojure.string :as string]
-   [clojure.contrib.prxml :as prxml])
+   [clojure.string :as string])
+  (:use
+   [clojure.data.xml :only [element emit]])
   (:import
    java.io.File
    [clojure.maven.annotations
@@ -69,17 +70,18 @@ The code is based on the
   [{:keys
     [init destroy listener-class handler servlet-class url-pattern]}]
   (with-out-str
-    (prxml/prxml
-     [:web-app
-      (when (or init destroy)
-        [:listener
-         [:listener-class (string/replace listener-class "-" "_")]])
-      [:servlet
-       [:servlet-name  handler]
-       [:servlet-class (string/replace servlet-class "-" "_")]]
-      [:servlet-mapping
-       [:servlet-name handler ]
-       [:url-pattern (or url-pattern "/*")]]])))
+    (emit
+     (element :web-app {}
+       (when (or init destroy)
+         (element :listener {}
+          (element :listener-class {} (string/replace listener-class "-" "_"))))
+       (element :servlet {}
+         (element :servlet-name {} handler)
+         (element :servlet-class {} (string/replace servlet-class "-" "_")))
+       (element :servlet-mapping {}
+                (element :servlet-name {} handler)
+                (element :url-pattern {} (or url-pattern "/*"))))
+     *out*)))
 
 (defn resource-path
   [root]
