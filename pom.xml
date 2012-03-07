@@ -133,7 +133,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.clojure</groupId>
+      <groupId>${clojure.groupId}</groupId>
       <artifactId>clojure</artifactId>
       <version>${clojure.version}</version>
     </dependency>
