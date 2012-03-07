@@ -333,7 +333,7 @@
     <clojureMaven.version>0.3.2-SNAPSHOT</clojureMaven.version>
     <clojure.groupId>org.clojure</clojure.groupId>
     <clojure.version>1.2.1</clojure.version>
-    <marginalia.version>0.6.0</marginalia.version>
+    <marginalia.version>0.7.0</marginalia.version>
     <codox.version>0.4.0</codox.version>
     <codox-md.version>0.1.0</codox-md.version>
     <ritz.version>0.2.1</ritz.version>

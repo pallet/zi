@@ -3,8 +3,7 @@
   (:require
    [zi.mojo :as mojo]
    [zi.core :as core]
-   [marginalia.core :as marginalia]
-   [marginalia.html :as html]
+   [classlojure.core :as classlojure]
    [clojure.java.io :as io])
   (:import
    java.io.File
@@ -25,23 +24,30 @@
     artifacts)))
 
 (defn run-marginalia
-  [project source-paths target-path]
-  (marginalia/ensure-directory! target-path)
-  (binding [html/*resources* ""]
-    (marginalia/uberdoc!
-     (.getPath (io/file target-path "uberdoc.html"))
-     (map #(.getPath %) (mapcat core/clj-files source-paths))
-     {:name (.getName project)
-      :version (.getVersion project)
-      :description (core/unindent-description (.getDescription project))
-      :dependencies (formatDependencies
-                     (filter
-                      #(= Artifact/SCOPE_COMPILE (.getScope %))
-                      (.getDependencyArtifacts project)))
-      :dev-dependencies (formatDependencies
-                         (filter
-                          #(= Artifact/SCOPE_TEST (.getScope %))
-                          (.getDependencyArtifacts project)))})))
+  [project classpath-elements source-paths target-path]
+  (let [cl (core/classloader-for
+            (concat classpath-elements (core/zi-classpath-elements)))]
+    (classlojure/eval-in
+     cl
+     `(do
+        (require 'marginalia.core)
+        (require 'marginalia.html)
+        (marginalia.core/ensure-directory! ~target-path)
+        (binding [marginalia.html/*resources* ""]
+          (marginalia.core/uberdoc!
+           ~(.getPath (io/file target-path "uberdoc.html"))
+           [~@(map #(.getPath %) (mapcat core/clj-files source-paths))]
+           {:name ~(.getName project)
+            :version ~(.getVersion project)
+            :description ~(core/unindent-description (.getDescription project))
+            :dependencies [~@(formatDependencies
+                              (filter
+                               #(= Artifact/SCOPE_COMPILE (.getScope %))
+                               (.getDependencyArtifacts project)))]
+            :dev-dependencies [~@(formatDependencies
+                                  (filter
+                                   #(= Artifact/SCOPE_TEST (.getScope %))
+                                   (.getDependencyArtifacts project)))]}))))))
 
 (mojo/defmojo Marginalia
   {Goal "marginalia"
@@ -59,5 +65,6 @@
 
   (run-marginalia
    project
+   (vec classpath-elements)
    (core/clojure-source-paths source-directory)
    marginalia-target-directory))
