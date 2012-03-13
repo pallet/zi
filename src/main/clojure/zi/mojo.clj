@@ -1,7 +1,7 @@
 (ns zi.mojo
   "Mojo syntax sugar"
   (:require
-    [zi.log :as log])
+    [clojure.maven.mojo.log :as log])
   (:import
     [clojure.maven.annotations
      Goal RequiresDependencyResolution Parameter Component]))

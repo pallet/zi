@@ -3,7 +3,7 @@
   (:require
    [zi.core :as core]
    [zi.mojo :as mojo]
-   [zi.log :as log]
+   [clojure.maven.mojo.log :as log]
    [zi.checkouts :as checkouts])
   (:import
    java.io.File

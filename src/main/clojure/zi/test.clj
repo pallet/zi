@@ -3,7 +3,7 @@
   (:require
    [zi.mojo :as mojo]
    [zi.core :as core]
-   [zi.log :as log]
+   [clojure.maven.mojo.log :as log]
    [classlojure.core :as classlojure]
    [clojure.string :as string])
   (:import

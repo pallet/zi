@@ -217,6 +217,11 @@
 
     <dependency>
       <groupId>org.cloudhoist</groupId>
+      <artifactId>clojure-maven-mojo</artifactId>
+      <version>${clojureMaven.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.cloudhoist</groupId>
       <artifactId>clojure-maven-mojo-annotations</artifactId>
       <version>${clojureMaven.version}</version>
     </dependency>
