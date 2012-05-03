@@ -115,6 +115,22 @@
     (map source-jar)
     (filter identity))))
 
+(defn jpda-jars
+  "JPDA is in the JDK's tools.jar and sa-jdi.jar."
+  []
+  (let [libdir (io/file (System/getProperty "java.home") ".." "lib")]
+    (for [j ["tools.jar" "sa-jdi.jar"]
+          :let [f (io/file libdir j)]
+          :when (.exists f)]
+      (.getCanonicalPath f))))
+
+(defn classpath-with-tools-jar
+  "Try adding tools.jar to the classpath"
+  [classpath-elements]
+  (concat
+   classpath-elements
+   (jpda-jars)))
+
 (defn smallest-indent
   "Given a multi-line string `s`, find the smallest indent."
   ([s drop-lines]

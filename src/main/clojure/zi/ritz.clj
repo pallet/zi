@@ -75,7 +75,9 @@
       (log/debugf "log-level %s" (pr-str log-level))
       (core/eval-clojure
        source-paths
-       (core/classpath-with-source-jars classpath-elements)
+       (-> classpath-elements
+           core/classpath-with-source-jars
+           core/classpath-with-tools-jar)
        `(do
           (require '~'ritz.socket-server)
           (ritz.socket-server/start
