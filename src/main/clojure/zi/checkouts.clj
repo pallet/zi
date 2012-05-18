@@ -26,4 +26,4 @@
              (for [checkout checkouts
                    :let [project (io/file checkout "project.clj")]
                    :when (.exists project)]
-               (lein/paths-for-checkout project))))))
+               (lein/paths-for-checkout (.getPath project)))))))

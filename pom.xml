@@ -9,7 +9,7 @@
 
   <groupId>org.cloudhoist.plugin</groupId>
   <artifactId>zi</artifactId>
-  <version>0.4.6-SNAPSHOT</version>
+  <version>0.5.1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>zi</name>
@@ -95,10 +95,7 @@
           <settingsFile>src/it/settings.xml</settingsFile>
           <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
           <postBuildHookScript>verify.bsh</postBuildHookScript>
-          <debug>false</debug>
-          <properties>
-            <clojure.version>${clojure.version}</clojure.version>
-          </properties>
+          <debug>true</debug>
         </configuration>
         <executions>
           <execution>
@@ -135,7 +132,8 @@
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>clojure</artifactId>
-      <version>${clojure.version}</version>
+      <!-- leiningen-core is AOT'd, so version has to match -->
+      <version>1.3.0</version>
     </dependency>
 
     <dependency>
@@ -145,40 +143,17 @@
     </dependency>
 
     <dependency>
-      <groupId>ritz</groupId>
-      <artifactId>ritz</artifactId>
-      <version>${ritz.version}</version>
+      <groupId>org.clojure</groupId>
+      <artifactId>data.xml</artifactId>
+      <version>0.0.3</version>
     </dependency>
 
     <dependency>
-      <groupId>swank-clojure</groupId>
-      <artifactId>swank-clojure</artifactId>
-      <version>1.3.1</version>
+      <groupId>leiningen-core</groupId>
+      <artifactId>leiningen-core</artifactId>
+      <version>${lein.version}</version>
     </dependency>
 
-    <dependency>
-      <groupId>marginalia</groupId>
-      <artifactId>marginalia</artifactId>
-      <version>${marginalia.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>hiccup</groupId>
-          <artifactId>hiccup</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>codox</groupId>
-      <artifactId>codox</artifactId>
-      <version>${codox.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>codox-md</groupId>
-      <artifactId>codox-md</artifactId>
-      <version>${codox-md.version}</version>
-    </dependency>
 
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -193,6 +168,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-aether-provider</artifactId>
+      <version>${maven.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.sonatype.aether</groupId>
       <artifactId>aether-api</artifactId>
       <version>${aether.version}</version>
@@ -203,6 +184,11 @@
       <version>${aether.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.cloudhoist</groupId>
+      <artifactId>clojure-maven-mojo</artifactId>
+      <version>${clojureMaven.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.cloudhoist</groupId>
       <artifactId>clojure-maven-mojo-annotations</artifactId>
@@ -227,31 +213,6 @@
       <type>maven-plugin</type>
     </dependency>
   </dependencies>
-
-  <repositories>
-    <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>sonatype-nexus-releases</id>
-      <name>Sonatype Nexus Releases</name>
-      <url>http://oss.sonatype.org/content/repositories/releases</url>
-    </repository>
-    <repository>
-      <id>clojars</id>
-      <url>http://clojars.org/repo</url>
-    </repository>
-  </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>ops4j.releases</id>
-      <url>http://repository.ops4j.org/maven2</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
 
   <profiles>
     <profile>
@@ -322,13 +283,14 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.version>3.0.3</maven.version>
-    <aether.version>1.11</aether.version>
-    <clojureMaven.version>0.3.1</clojureMaven.version>
-    <clojure.version>1.2.1</clojure.version>
-    <marginalia.version>0.6.0</marginalia.version>
-    <codox.version>0.4.0</codox.version>
+    <maven.version>3.0.4</maven.version>
+    <aether.version>1.13.1</aether.version>
+    <clojureMaven.version>0.3.2</clojureMaven.version>
+    <marginalia.version>0.7.0</marginalia.version>
+    <codox.version>0.6.1</codox.version>
     <codox-md.version>0.1.0</codox-md.version>
-    <ritz.version>0.2.1</ritz.version>
+    <ritz.version>0.3.0</ritz.version>
+    <data.xml.version>0.0.1</data.xml.version>
+    <lein.version>2.0.0-preview4</lein.version>
   </properties>
 </project>

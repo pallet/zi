@@ -1,8 +1,10 @@
 (ns zi.mojo
   "Mojo syntax sugar"
+  (:require
+    [clojure.maven.mojo.log :as log])
   (:import
-   [clojure.maven.annotations
-    Goal RequiresDependencyResolution Parameter Component]))
+    [clojure.maven.annotations
+     Goal RequiresDependencyResolution Parameter Component]))
 
 (defn parameter
   "Define a mojo parameter field"
@@ -65,7 +67,8 @@
 
        org.apache.maven.plugin.Mojo
        (~'execute [_#]
-         ~@body)
+           (log/with-log ~'log
+             ~@body))
        (~'setLog [_# logger#] (set! ~'log logger#))
        (~'getLog [_#] ~'log)
 

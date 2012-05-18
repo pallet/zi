@@ -1,5 +1,31 @@
 # Release Notes
 
+# 0.5.0
+
+- Properly handle classpath for targets running in project classpath
+  The dependencies for codox, marginalia, ritz, and swank-clojure are now
+  handled properly.  The zi pom no longer depends on these projects.
+
+- Automatically add tools.jar to classpath for the ritz task
+
+- Use leiningen-core for calculating checkout dependency paths
+  Upgrade to clojure 1.3.0 and leiningen-core 2.0.0-preview4
+
+- Add clojure-maven-mojo as a dependency, and use it's log wrapper
+
+- Add .ritz-exception-filters to .gitignore
+
+- Add a test for the test mojo runner
+
+- Update to marginalia 0.7.0, and run it in the project classpath
+
+- Remove use of contrib in ring-genfiles
+  Switch to data.xml
+
+- Unindent pom description for marginalia and codox
+
+- Update to maven 3.0.4 and aether 1.13
+
 # 0.4.5
 
 - Allow exclusion of tests based on a regex

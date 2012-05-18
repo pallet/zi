@@ -11,7 +11,7 @@ locate source, which by default means that it uses `src/main/clojure` and
 
 From an implementation perspecitve, most of the goals are written in clojure.
 
-This is alpha quality. It requires maven 3.0.3.
+Zi requires maven 3.0.4.
 
 ## Available goals
 
@@ -88,7 +88,7 @@ you need to make sure that your clj source files end up in your jar file.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.4.5</version>
+          <version>0.5.0</version>
           <executions>
             <execution>
               <id>default-resources</id>
@@ -115,7 +115,7 @@ test-jar file.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.4.5</version>
+          <version>0.5.0</version>
           <executions>
             <execution>
               <id>default-test-resources</id>
@@ -140,7 +140,7 @@ The compile goal AOT compiles clojure source.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.4.5</version>
+          <version>0.5.0</version>
           <executions>
             <execution>
               <id>default-compile</id>
@@ -278,8 +278,7 @@ The codox goal creates codox generated API documentation in the `doc` directory.
 
 ### marginalia
 
-The marginalia goal creates a marginalia annotated source page. Note that this fails with
-clojure 1.3 projects, until a 1.3 compatable release of marginalia is forthcoming.
+The marginalia goal creates a marginalia annotated source page.
 
 <table>
   <tr>
@@ -346,7 +345,8 @@ See [lein-ring plugin](https://github.com/weavejester/lein-ring/).
 
 ## Zi, the builder
 
-Zi was a builder in [northern mythology](http://www.pitt.edu/~dash/mbuilder.html#eckwadt).
+Zi was a builder in
+[northern mythology](http://www.pitt.edu/~dash/mbuilder.html#eckwadt).
 
 ## License
 

@@ -3,6 +3,7 @@
   (:require
    [zi.mojo :as mojo]
    [zi.core :as core]
+   [clojure.maven.mojo.log :as log]
    [classlojure.core :as classlojure]
    [clojure.string :as string])
   (:import
@@ -21,16 +22,17 @@
       nss)))
 
 (defn report-test
-  [log result]
+  [result]
   (case (:type result)
-    :fail (.error log
-                  "FAIL %s expected: %s  actual: %s"
-                  (:message result "") (:expected result) (:actual result))
-    :error (.error log "%s expected: %s  actual: %s"
-                   (:message result "") (:expected result) (:actual result))))
+    :fail (log/errorf
+            "FAIL %s expected: %s  actual: %s"
+            (:message result "") (:expected result) (:actual result))
+    :error (log/errorf
+             "%s expected: %s  actual: %s"
+             (:message result "") (:expected result) (:actual result))))
 
 (defn run-tests
-  [classpath-elements test-source-directory log init-script exclude-ns-regex]
+  [classpath-elements test-source-directory init-script exclude-ns-regex]
   (let [cl (core/classloader-for classpath-elements)
         bindings (gensym "bindings")
         body (gensym "body")
@@ -41,11 +43,9 @@
         init-script (when init-script
                       (read-string (str "(do " init-script ")")))]
     (when (seq test-ns-symbols)
-      (.debug
-       log
+      (log/debug
        (str "Running tests for " (string/join ", " (map name test-ns-list))))
-      (.debug
-       log
+      (log/debug
        (str "Init script " init-script))
       (classlojure/eval-in
        cl
@@ -92,18 +92,16 @@
              *out* *err*)
             passes (dec (count (map :pass results)))
             summary (last results)]
-        (.debug
-         log (let [res (pr-str results)
-                   l (count res)]
-               (str
-                "RESULTS: "
-                (subs res 0 (min 1024 l))
-                (if (> l 1024) "..." ""))))
-        (.info
-         log
-         (format
-          "Tests run: %d, passed: %d, failed: %d, errors: %d"
-          (:test summary) (:pass summary) (:fail summary) (:error summary)))
+        (log/debug
+         (let [res (pr-str results)
+               l (count res)]
+           (str
+            "RESULTS: "
+            (subs res 0 (min 1024 l))
+            (if (> l 1024) "..." ""))))
+        (log/infof
+         "Tests run: %d, passed: %d, failed: %d, errors: %d"
+         (:test summary) (:pass summary) (:fail summary) (:error summary))
         (when (or (pos? (:fail summary)) (pos? (:error summary)))
           (throw
            (org.apache.maven.plugin.MojoFailureException. "Tests failed")))))))
@@ -141,6 +139,5 @@
       (core/clojure-source-paths source-directory)
       test-classpath-elements)
      test-source-directory
-     log
      init-script
      exclude-test-ns-regex)))
