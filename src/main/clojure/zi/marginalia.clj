@@ -5,6 +5,8 @@
    [zi.core :as core]
    [classlojure.core :as classlojure]
    [clojure.java.io :as io])
+  (:use
+   [zi.maven :only [resolve-dependency]])
   (:import
    java.io.File
    [clojure.maven.annotations
@@ -24,9 +26,17 @@
     artifacts)))
 
 (defn run-marginalia
-  [project classpath-elements source-paths target-path]
-  (let [cl (core/classloader-for
-            (concat classpath-elements (core/zi-classpath-elements)))]
+  [repo-system repo-system-session project classpath-elements
+   source-paths target-path]
+  (let [marginalia-deps (resolve-dependency
+                         repo-system
+                         repo-system-session
+                         (.getRemoteProjectRepositories project)
+                         "marginalia" "marginalia"
+                         (or (System/getProperty "marginalia.version") "0.7.0")
+                         {})
+        cl (core/classloader-for
+            (concat classpath-elements marginalia-deps))]
     (classlojure/eval-in
      cl
      `(do
@@ -52,7 +62,11 @@
 (mojo/defmojo Marginalia
   {Goal "marginalia"
    RequiresDependencyResolution "test"}
-  [^{Parameter
+  [^{Component {:role "org.sonatype.aether.RepositorySystem"}}
+   repoSystem
+   ^{Parameter {:defaultValue "${repositorySystemSession}" :readonly true}}
+   repoSystemSession
+   ^{Parameter
      {:defaultValue "${project.build.directory}"
       :alias "marginaliaTargetDirectory"
       :description "Where to write marginalia output"}}
@@ -64,6 +78,8 @@
    project]
 
   (run-marginalia
+   repoSystem
+   repoSystemSession
    project
    (vec classpath-elements)
    (core/clojure-source-paths source-directory)

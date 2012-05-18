@@ -5,30 +5,28 @@
    [zi.core :as core]
    [zi.checkouts :as checkouts]
    [clojure.java.io :as io])
+  (:use
+   [zi.maven :only [resolve-dependency]])
   (:import
    java.io.File
    [clojure.maven.annotations
     Goal RequiresDependencyResolution Parameter Component]
    org.apache.maven.plugin.MojoExecutionException))
 
-(def ^{:const true} swank-clojure-path-regex
-  #"swank-clojure/swank-clojure/[0-9.]+(?:-SNAPSHOT)?/swank-clojure")
-
-(def ^{:const true} swank-clojure-version-regex
-  #"/([0-9]+)\.([0-9]+)\.([0-9]+)(?:-SNAPSHOT)?")
-
 (mojo/defmojo Swank
   {Goal "swank-clojure"
    RequiresDependencyResolution "test"}
-  [
-   ^{Component {:role "org.sonatype.aether.RepositorySystem"}}
-   repoSystem
+  [^{Component {:role "org.sonatype.aether.RepositorySystem"
+                :alias "repoSystem"}}
+   repo-system
 
-   ^{Component {:role "org.apache.maven.project.ProjectBuilder"}}
-   projectBuilder
+   ^{Component {:role "org.apache.maven.project.ProjectBuilder"
+                :alias "projectBuilder"}}
+   project-builder
 
-   ^{Parameter {:defaultValue "${repositorySystemSession}" :readonly true}}
-   repoSystemSession
+   ^{Parameter {:defaultValue "${repositorySystemSession}" :readonly true
+                :alias "repoSystemSession"}}
+   repo-system-session
 
    ^{Parameter
      {:expression "${clojure.swank.port}" :defaultValue "4005"
@@ -46,16 +44,26 @@
      {:expression "${clojure.swank.network}" :defaultValue "localhost"
       :description "Network address for the server to bind to"}}
    ^String
-   network]
+   network
 
-  (let [swank-artifact (core/overridable-artifact-path
-                        swank-clojure-path-regex
-                        test-classpath-elements)]
+   ^{Parameter
+     {:expression "${project}"
+      :description "Project"}}
+   project]
+
+  (let [swank-artifacts (resolve-dependency
+                         repo-system
+                         repo-system-session
+                         (.getRemoteProjectRepositories project)
+                         "swank-clojure" "swank-clojure"
+                         (or (System/getProperty "swank-clojure.version")
+                             "1.3.1")
+                         {})]
     (core/eval-clojure
      (into (core/clojure-source-paths source-directory)
            (checkouts/checkout-paths
-            repoSystem repoSystemSession projectBuilder))
-     (into (vec test-classpath-elements) swank-artifact)
+            repo-system repo-system-session project-builder))
+     (concat test-classpath-elements swank-artifacts)
      `(do
         (require '~'swank.swank '~'swank.commands.basic)
         (swank.swank/start-repl

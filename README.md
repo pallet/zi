@@ -278,8 +278,7 @@ The codox goal creates codox generated API documentation in the `doc` directory.
 
 ### marginalia
 
-The marginalia goal creates a marginalia annotated source page. Note that this fails with
-clojure 1.3 projects, until a 1.3 compatable release of marginalia is forthcoming.
+The marginalia goal creates a marginalia annotated source page.
 
 <table>
   <tr>
@@ -346,7 +345,8 @@ See [lein-ring plugin](https://github.com/weavejester/lein-ring/).
 
 ## Zi, the builder
 
-Zi was a builder in [northern mythology](http://www.pitt.edu/~dash/mbuilder.html#eckwadt).
+Zi was a builder in
+[northern mythology](http://www.pitt.edu/~dash/mbuilder.html#eckwadt).
 
 ## License
 

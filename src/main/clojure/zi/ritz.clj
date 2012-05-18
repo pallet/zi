@@ -5,6 +5,8 @@
    [zi.mojo :as mojo]
    [clojure.maven.mojo.log :as log]
    [zi.checkouts :as checkouts])
+  (:use
+   [zi.maven :only [resolve-dependency]])
   (:import
    java.io.File
    [clojure.maven.annotations
@@ -13,21 +15,20 @@
     org.apache.maven.plugin.Mojo
     org.apache.maven.plugin.MojoExecutionException))
 
-(def ^{:const true} ritz-path-regex
-  #"ritz/ritz/[0-9.]+(?:-SNAPSHOT)?/ritz")
-
 (mojo/defmojo RitzMojo
   {Goal "ritz"
    RequiresDependencyResolution "test"}
-  [
-   ^{Component {:role "org.sonatype.aether.RepositorySystem"}}
-   repoSystem
+  [^{Component {:role "org.sonatype.aether.RepositorySystem"
+                :alias "repoSystem"}}
+   repo-system
 
-   ^{Component {:role "org.apache.maven.project.ProjectBuilder"}}
-   projectBuilder
+   ^{Component {:role "org.apache.maven.project.ProjectBuilder"
+                :alias "projectBuilder"}}
+   project-builder
 
-   ^{Parameter {:defaultValue "${repositorySystemSession}" :readonly true}}
-   repoSystemSession
+   ^{Parameter {:defaultValue "${repositorySystemSession}" :readonly true
+                :alias "repoSystemSession"}}
+   repo-system-session
 
    ^{Parameter
      {:expression "${clojure.swank.port}" :defaultValue "4005"}}
@@ -47,7 +48,12 @@
    ^{Parameter
      {:defaultValue "${project.packaging}" :required true}}
    ^String
-   packaging]
+   packaging
+
+   ^{Parameter
+     {:expression "${project}"
+      :description "Project"}}
+   project]
 
   (if (= packaging "pom")
     (log/info "Ritz can not be run on a project with pom packaging")
@@ -57,16 +63,20 @@
                       (throw
                        (MojoExecutionException.
                         "Could not create swank port file" e))))
-          ritz-artifact (core/overridable-artifact-path
-                         ritz-path-regex test-classpath-elements)
+          ritz-artifacts (resolve-dependency
+                         repo-system
+                         repo-system-session
+                         (.getRemoteProjectRepositories project)
+                         "ritz" "ritz"
+                         (or (System/getProperty "ritz.version") "0.3.0")
+                         {})
           source-paths (->
                         (core/clojure-source-paths source-directory)
                         (into (core/clojure-source-paths test-source-directory))
                         (into (checkouts/checkout-paths
-                               repoSystem repoSystemSession projectBuilder)))
-          classpath-elements (->
-                              (vec test-classpath-elements)
-                              (into ritz-artifact))
+                               repo-system repo-system-session
+                               project-builder)))
+          classpath-elements (concat test-classpath-elements ritz-artifacts)
           log-level (if-let [p (System/getProperty "ritz.loglevel")]
                       (read-string p)
                       :warn)]
