@@ -49,8 +49,7 @@ The code is based on the
      (~handler-sym
       (assoc request#
         :path-info (.getPathInfo (:servlet-request request#))
-        :context (.getContextPath (:servlet-request request#)))))
-  handler-sym)
+        :context (.getContextPath (:servlet-request request#))))))
 
 ;; Adapted from the lein-ring plugin
 (defn servlet-source
