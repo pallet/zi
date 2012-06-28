@@ -1,5 +1,9 @@
 # Release Notes
 
+# 0.5.1
+
+- in ring-genfiles, fix handler-source which was not returning wished fn
+
 # 0.5.0
 
 - Properly handle classpath for targets running in project classpath
