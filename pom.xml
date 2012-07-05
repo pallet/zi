@@ -9,7 +9,7 @@
 
   <groupId>org.cloudhoist.plugin</groupId>
   <artifactId>zi</artifactId>
-  <version>0.5.2-SNAPSHOT</version>
+  <version>0.5.3-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>zi</name>
@@ -285,7 +285,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.version>3.0.4</maven.version>
     <aether.version>1.13.1</aether.version>
-    <clojureMaven.version>0.3.2</clojureMaven.version>
+    <clojureMaven.version>0.3.3</clojureMaven.version>
     <marginalia.version>0.7.0</marginalia.version>
     <codox.version>0.6.1</codox.version>
     <codox-md.version>0.1.0</codox-md.version>
