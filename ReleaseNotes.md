@@ -1,5 +1,10 @@
 # Release Notes
 
+# 0.5.2
+
+- Update to clojure-maven 0.3.3 to fix line number reporting in compiler.
+  Fixes #10
+
 # 0.5.1
 
 - in ring-genfiles, fix handler-source which was not returning wished fn
