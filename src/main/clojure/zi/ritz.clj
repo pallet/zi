@@ -63,12 +63,14 @@
                       (throw
                        (MojoExecutionException.
                         "Could not create swank port file" e))))
+          ritz-version (or (System/getProperty "ritz.version") "0.4.1")
+          ritz-0-3 (.startsWith ritz-version "0.3")
           ritz-artifacts (resolve-dependency
                          repo-system
                          repo-system-session
                          (.getRemoteProjectRepositories project)
-                         "ritz" "ritz"
-                         (or (System/getProperty "ritz.version") "0.3.0")
+                         "ritz" (if ritz-0-3 "ritz" "ritz-swank")
+                         ritz-version
                          {})
           source-paths (->
                         (core/clojure-source-paths source-directory)
@@ -89,8 +91,12 @@
            core/classpath-with-source-jars
            core/classpath-with-tools-jar)
        `(do
-          (require '~'ritz.socket-server)
-          (ritz.socket-server/start
+          (require '~(if ritz-0-3
+                       'ritz.socket-server
+                       'ritz.swank.socket-server))
+          (~(if ritz-0-3
+              'ritz.socket-server/start
+              'ritz.swank.socket-server/start)
            {:port-file ~(.getPath tmpfile)
             :host ~network
             :port ~(Integer/parseInt port)
