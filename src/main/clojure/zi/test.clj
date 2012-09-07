@@ -130,9 +130,17 @@
       :alias "skipTests"
       :defaultValue "false"
       :typename "boolean"}}
-   skip-tests]
+   skip-tests
 
-  (when-not ({"true" true "false" false} skip-tests)
+   ^{Parameter
+     {:expression "${maven.test.skip}"
+      :description "Skip test execution"
+      :defaultValue "false"
+      :typename "boolean"}}
+   skip-test-execution]
+
+  (when-not (or ({"true" true "false" false} skip-tests)
+                ({"true" true "false" false} skip-test-execution))
     (run-tests
      (concat
       (core/clojure-source-paths test-source-directory)
