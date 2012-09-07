@@ -1,5 +1,11 @@
 # Release Notes
 
+# 0.5.3
+
+- Respect maven.test.skip in the test task
+
+- Update to ritz 0.4.1. Now works with ritz 0.3.x and 0.4.x.
+
 # 0.5.2
 
 - Update to clojure-maven 0.3.3 to fix line number reporting in compiler.
