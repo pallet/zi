@@ -1,5 +1,13 @@
 # Release Notes
 
+# 0.5.4
+
+- Add nrepl goal
+  The nrepl goal starts a vanilla nREPL server.
+
+- Add a ritz-nrepl goal
+  Adds a goal for starting a ritz-nrepl server.
+
 # 0.5.3
 
 - Respect maven.test.skip in the test task

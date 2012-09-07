@@ -19,6 +19,7 @@ Zi requires maven 3.0.4.
  * zi:testResources
  * zi:compile
  * zi:ritz
+ * zi:ritz-nrepl
  * zi:swank-clojure
  * zi:test
  * zi:codox
@@ -88,7 +89,7 @@ you need to make sure that your clj source files end up in your jar file.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.5.3</version>
+          <version>0.5.4</version>
           <executions>
             <execution>
               <id>default-resources</id>
@@ -115,7 +116,7 @@ test-jar file.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.5.3</version>
+          <version>0.5.4</version>
           <executions>
             <execution>
               <id>default-test-resources</id>
@@ -140,7 +141,7 @@ The compile goal AOT compiles clojure source.
         <plugin>
           <groupId>org.cloudhoist.plugin</groupId>
           <artifactId>zi</artifactId>
-          <version>0.5.3</version>
+          <version>0.5.4</version>
           <executions>
             <execution>
               <id>default-compile</id>
@@ -205,13 +206,32 @@ The ritz goal starts a ritz server.
   </tr>
 </table>
 
-The ritz and swank-clojure goals both recognise sub-projects linked in a
-checkouts directory, and adds their sources and resources to the the
+The ritz, ritz-nrepl and swank-clojure goals all recognise sub-projects linked
+in a checkouts directory, and adds their sources and resources to the the
 classpath.
 
-The ritz plugin also adds source jars to the classpath if they are available in
-the local repository.  You can resolve the source jars using
-`mvn dependency:sources`.
+The ritz and ritz-nrepl goals also adds source jars to the classpath if they are
+available in the local repository.  You can resolve the source jars using `mvn
+dependency:sources`.
+
+### ritz-nrepl
+
+The ritz-nrepl goal starts a ritz nREPL server.
+
+<table>
+  <tr>
+    <th>Property</th>
+    <th>Variable</th>
+    <th>Default</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>port</td>
+    <td>clojure.nrepl.port</td>
+    <td>4005</td>
+    <td>The nrepl server port</td>
+  </tr>
+</table>
 
 ### swank-clojure
 
