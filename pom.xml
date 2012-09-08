@@ -9,7 +9,7 @@
 
   <groupId>org.cloudhoist.plugin</groupId>
   <artifactId>zi</artifactId>
-  <version>0.5.5-SNAPSHOT</version>
+  <version>0.5.6-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>zi</name>
@@ -213,6 +213,20 @@
       <type>maven-plugin</type>
     </dependency>
   </dependencies>
+
+  <repositories>
+    <repository>
+      <id>clojars</id>
+      <url>http://clojars.org/repo</url>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>clojars</id>
+      <url>http://clojars.org/repo</url>
+    </pluginRepository>
+  </pluginRepositories>
 
   <profiles>
     <profile>
