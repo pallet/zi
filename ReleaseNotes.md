@@ -1,5 +1,10 @@
 # Release Notes
 
+# 0.5.5
+
+- Add repository information for clojars
+  When using zi goals, clojars artifacts were not being resolved. Fixes #11
+
 # 0.5.4
 
 - Add nrepl goal
