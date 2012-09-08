@@ -214,6 +214,20 @@
     </dependency>
   </dependencies>
 
+  <repositories>
+    <repository>
+      <id>clojars</id>
+      <url>http://clojars.org/repo</url>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>clojars</id>
+      <url>http://clojars.org/repo</url>
+    </pluginRepository>
+  </pluginRepositories>
+
   <profiles>
     <profile>
       <id>sonatype-release-profile-extension</id>
