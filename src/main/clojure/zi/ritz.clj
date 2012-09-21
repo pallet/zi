@@ -6,6 +6,7 @@
    [clojure.maven.mojo.log :as log]
    [zi.checkouts :as checkouts])
   (:use
+   [clojure.set :only [difference union]]
    [zi.maven :only [resolve-dependency]])
   (:import
    java.io.File
@@ -64,32 +65,64 @@
                        (MojoExecutionException.
                         "Could not create swank port file" e))))
           ritz-version (or (System/getProperty "ritz.version") "0.4.1")
+          lein-version (or (System/getProperty "lein.version")
+                           "2.0.0-preview10")
+          clojure-version (or (System/getProperty "ritz.clojure.version")
+                              "1.4.0")
           ritz-0-3 (.startsWith ritz-version "0.3")
           ritz-artifacts (resolve-dependency
-                         repo-system
-                         repo-system-session
-                         (.getRemoteProjectRepositories project)
-                         "ritz" (if ritz-0-3 "ritz" "ritz-swank")
-                         ritz-version
-                         {})
+                          repo-system
+                          repo-system-session
+                          (.getRemoteProjectRepositories project)
+                          "ritz" (if ritz-0-3 "ritz" "ritz-swank")
+                          ritz-version
+                          {:exclusions [["org.clojure" "clojure"]]})
+          clojure-artifacts (resolve-dependency
+                             repo-system
+                             repo-system-session
+                             (.getRemoteProjectRepositories project)
+                             "org.clojure" "clojure" clojure-version {})
+          lein-artifacts (resolve-dependency
+                          repo-system
+                          repo-system-session
+                          (.getRemoteProjectRepositories project)
+                          "leiningen" "leiningen" lein-version
+                          {:exclusions [["org.clojure" "clojure"]
+                                        ["org.clojure" "data.xml"]
+                                        ["reply" "reply"]
+                                        ["clj-http" "clj-http"]
+                                        ["org.apache.maven.indexer"
+                                         "indexer-core"]]})
           source-paths (->
                         (core/clojure-source-paths source-directory)
                         (into (core/clojure-source-paths test-source-directory))
                         (into (checkouts/checkout-paths
                                repo-system repo-system-session
                                project-builder)))
-          classpath-elements (concat test-classpath-elements ritz-artifacts)
+          classpath-elements test-classpath-elements
+          debug-cp (-> (concat clojure-artifacts ritz-artifacts lein-artifacts)
+                       core/classpath-with-tools-jar
+                       distinct)
+          vm-cp debug-cp
+          cp (distinct (concat source-paths
+                               (-> classpath-elements
+                                   core/classpath-with-source-jars)))
+          cp-with-ritz (concat cp ritz-artifacts)
           log-level (if-let [p (System/getProperty "ritz.loglevel")]
-                      (read-string p)
-                      :warn)]
+                      (keyword p)
+                      :warn)
+          extra-cp (union
+                    (difference (set cp-with-ritz) (set cp))
+                    (set (core/jpda-jars)))]
       (log/debugf "source paths: %s" (vec source-paths))
       (log/debugf "classpath elements: %s" (vec classpath-elements))
+      (log/debugf "debug-cp: %s" (vec debug-cp))
+      (log/debugf "vm-cp: %s" (vec vm-cp))
+      (log/debugf "cp: %s" (vec cp))
       (log/debugf "log-level %s" (pr-str log-level))
       (core/eval-clojure
        source-paths
-       (-> classpath-elements
-           core/classpath-with-source-jars
-           core/classpath-with-tools-jar)
+       debug-cp
        `(do
           (require '~(if ritz-0-3
                        'ritz.socket-server
@@ -102,4 +135,7 @@
             :port ~(Integer/parseInt port)
             :encoding ~encoding
             :dont-close true
-            :log-level ~log-level}))))))
+            :log-level ~log-level
+            :classpath ~(vec cp-with-ritz)
+            :vm-classpath ~(vec vm-cp)
+            :extra-classpath ~(vec extra-cp)}))))))
