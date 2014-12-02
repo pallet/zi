@@ -91,7 +91,7 @@ public class ClojureCompilerMojo
     List<String> newRoots = new java.util.LinkedList();
     for (String srcDir : sourceRoots)
     {
-      if (srcDir.endsWith("/java"))
+      if (srcDir.endsWith("/java") || srcDir.endsWith("\\java"))
       {
         newRoots.add(srcDir.substring(0, srcDir.length()-4) + "clojure");
       }
